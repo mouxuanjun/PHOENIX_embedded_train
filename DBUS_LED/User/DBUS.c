@@ -17,10 +17,10 @@ void RemoteDataProcess(rc_info_t *rc_ctrl, uint8_t rx_data[18]){
 				return ;
 		}
 		
-		rc_ctrl -> mouse.mouse_x = (int16_t)rx_data[6] | ((int16_t)rx_data[7] << 8);
-	  rc_ctrl -> mouse.mouse_y= (int16_t)rx_data[8] | ((int16_t)rx_data[9] << 8);
-	  rc_ctrl -> mouse.mouse_press_l = (int16_t)rx_data[10];
-	  rc_ctrl -> mouse.mouse_press_r = (int16_t)rx_data[11];
+	    rc_ctrl -> mouse.mouse_x = (int16_t)rx_data[6] | ((int16_t)rx_data[7] << 8);
+	    rc_ctrl -> mouse.mouse_y= (int16_t)rx_data[8] | ((int16_t)rx_data[9] << 8);
+	    rc_ctrl -> mouse.mouse_press_l = (int16_t)rx_data[10];
+	    rc_ctrl -> mouse.mouse_press_r = (int16_t)rx_data[11];
 
 		*(uint16_t *)&rc_ctrl -> key = (uint16_t)(rx_data[12] | (rx_data[13] << 8));
 

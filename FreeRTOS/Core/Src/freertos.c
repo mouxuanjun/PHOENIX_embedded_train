@@ -25,7 +25,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "Usart1.h"
+#include "usart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,6 +50,8 @@
 /* USER CODE END Variables */
 osThreadId LED_GHandle;
 osThreadId LED_RHandle;
+osThreadId UsartTaskHandle;
+osMessageQId RCqueueHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -57,6 +60,7 @@ osThreadId LED_RHandle;
 
 void LED_GTask(void const * argument);
 void LED_RTask(void const * argument);
+void usart_Task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -98,18 +102,27 @@ void MX_FREERTOS_Init(void) {
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
+  /* Create the queue(s) */
+  /* definition and creation of RCqueue */
+  osMessageQDef(RCqueue, 16, uint16_t);
+  RCqueueHandle = osMessageCreate(osMessageQ(RCqueue), NULL);
+
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
   /* definition and creation of LED_G */
-  osThreadDef(LED_G, LED_GTask, osPriorityNormal, 0, 256);
+  osThreadDef(LED_G, LED_GTask, osPriorityLow, 0, 256);
   LED_GHandle = osThreadCreate(osThread(LED_G), NULL);
 
   /* definition and creation of LED_R */
-  osThreadDef(LED_R, LED_RTask, osPriorityNormal, 0, 128);
+  osThreadDef(LED_R, LED_RTask, osPriorityLow, 0, 128);
   LED_RHandle = osThreadCreate(osThread(LED_R), NULL);
+
+  /* definition and creation of UsartTask */
+  osThreadDef(UsartTask, usart_Task, osPriorityNormal, 0, 128);
+  UsartTaskHandle = osThreadCreate(osThread(UsartTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -151,6 +164,28 @@ __weak void LED_RTask(void const * argument)
     osDelay(1);
   }
   /* USER CODE END LED_RTask */
+}
+
+/* USER CODE BEGIN Header_usart_Task */
+/**
+* @brief Function implementing the UsartTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_usart_Task */
+void usart_Task(void const * argument)
+{
+  /* USER CODE BEGIN usart_Task */
+  /* Infinite loop */
+  for(;;)
+  {
+		usart_Send();
+		// FreeRTOS延时（使用时间转换宏）
+		osDelay(500);
+		//vTaskDelay(pdMS_TO_TICKS(1000));  
+    
+  }
+  /* USER CODE END usart_Task */
 }
 
 /* Private application code --------------------------------------------------*/

@@ -46,7 +46,8 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     uint8_t rx_data[8];
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
     if(hcan->Instance == CAN1){
-	     if(rx_header.StdId == 0x207){
+			if(rx_header.StdId == 0x205){//强烈建议这里改成用定义，不然修改太麻烦了
+				
 		    Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
 		 }
     }

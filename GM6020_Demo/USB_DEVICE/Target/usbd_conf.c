@@ -72,7 +72,19 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle)
   if(pcdHandle->Instance==USB_OTG_FS)
   {
   /* USER CODE BEGIN USB_OTG_FS_MspInit 0 */
-
+		/*���Զ�USB��û�в����豸ʱ��DP��DM�ߣ��ǵ͵�ƽ״̬�����豸�˵�DP�ߣ���1.5K����������3.3V�����豸���뵽����USB�ڣ�
+		USB�ڵ�DP�߾ͻᱻ�øߵ�ƽ��������������������ж��豸�Ƿ���롢�γ����̶�������ͬ�Ķ�������ö�١��ͷŶ˿ڵȡ�  
+		�����⴮�����õ�USB��һֱ����USB���ϣ���STM32��¼�����������к󣬳������USB����ȴ�������������ö�ٹ��̣�
+		������ڼ����⴮�ڵ�USB��û�жϿ�����������Ϊ�豸��һֱ���ߣ�����ö�ٳɹ���һֱ������ѯ�����շ�*/
+		/*因此，需要给DP口一段时间的高电平以防故障*/
+    __HAL_RCC_GPIOA_CLK_ENABLE();                   
+    GPIO_InitTypeDef GPIO_InitStruct = {0};         
+    GPIO_InitStruct.Pin = GPIO_PIN_12;              
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;     
+    GPIO_InitStruct.Pull = GPIO_PULLDOWN;           
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;    
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);         
+    HAL_Delay(5);                                   
   /* USER CODE END USB_OTG_FS_MspInit 0 */
 
     __HAL_RCC_GPIOA_CLK_ENABLE();

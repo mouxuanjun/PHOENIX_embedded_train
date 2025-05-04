@@ -17,6 +17,7 @@ typedef struct
     int16_t  rotor_speed;//电机速度
     int16_t  torque_current;//电机扭矩
     uint8_t  temp;//温度
+	  uint16_t test;
 
 }Moto_GM6020_t;
 

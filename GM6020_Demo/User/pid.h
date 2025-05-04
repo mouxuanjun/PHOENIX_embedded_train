@@ -9,13 +9,16 @@
 
 typedef struct
 {   
-    float P;//设定速度
-    float I;//设定角度
+    float P;
+    float I;
 	  float D;
+	  float F;//鍓嶉
 
 }PID;
 
 
 float position_PID(float target, float current);
 float velocity_PID(float target, float current);
+void init_sine_generator(float initial_phase_rad);
+float generate_sine_target(void);
 #endif

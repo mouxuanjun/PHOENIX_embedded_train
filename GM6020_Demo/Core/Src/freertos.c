@@ -172,11 +172,15 @@ void StartTask02(void const * argument)
   /* USER CODE BEGIN StartTask02 */
 	 BaseType_t xStatus;
 	 const TickType_t xTicksToWait = 0;//静态变量
+	 init_sine_generator(0.0f);//初始化正弦波发生器
+	
   /* Infinite loop */
   for(;;)
   {
+		//float target_position = generate_sine_target();
+		GM6020.Set_Angle = generate_sine_target();
+		//float temp_result1=position_PID(target_position,GM6020.rotor_angle);
 		float temp_result1=position_PID(GM6020.Set_Angle,GM6020.rotor_angle);
-		
 		
 
     xStatus = xQueueSend(Usb_queneHandle, &temp_result1, xTicksToWait);
@@ -203,7 +207,7 @@ void StartTask03(void const * argument)
   /* USER CODE BEGIN StartTask03 */
 	float received_target_velocity; // 用于存储从队列接收到的目标速度2
   BaseType_t xStatus;             // 用于检查 xQueueReceive 的返回值
-
+	
   const TickType_t xTicksToWait = portMAX_DELAY; // 设置等待时间
   /* Infinite loop */
   for(;;)
@@ -214,15 +218,18 @@ void StartTask03(void const * argument)
     {
       // 成功接收到数据，现在 received_target_velocity 包含了 Task02 发送的值
       // 使用接收到的值作为速度PID的目标值
+			received_target_velocity=(received_target_velocity>=340)?340:received_target_velocity;
+			received_target_velocity=(received_target_velocity<=-340)?-340:received_target_velocity;
+			
       float temp_result2 = velocity_PID(received_target_velocity, GM6020.rotor_speed);
-
+        //float temp_result2 = velocity_PID(GM6020.Set_Speed, GM6020.rotor_speed);
       
       // temp_result2 （目标电压）需要转换类型。
       int16_t motor_command = (int16_t)temp_result2; 
       motor_command = (motor_command > 25000) ? 25000 : motor_command; // 限制上限
       motor_command = (motor_command < -25000) ? -25000 : motor_command; // 限制下限
-      
-			Send_GM6020_Motor_Message(0x00, 0x00, 0x00,motor_command); 
+      GM6020.test=motor_command;
+			Send_GM6020_Motor_Message(motor_command,0x00, 0x00, 0x00); 
     }
     else
     {

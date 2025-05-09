@@ -176,7 +176,8 @@ void StartDefaultTask(void const * argument)
 void StartTask02(void const * argument)
 {
   /* USER CODE BEGIN StartTask02 */
-	float received_target_angle;
+	uint32_t received_target_angle;
+	float received_traget_angle_f;
 	uint32_t temp_message;
 	 BaseType_t xStatus1;
 	BaseType_t xStatus2;
@@ -204,8 +205,8 @@ void StartTask02(void const * argument)
 				
 			}else if(temp_message==MSG_MAGIC2){
 				xQueueReceive(RCqueueHandle, &received_target_angle, xTicksToWait);
-				
-				GM6020.Set_Angle+=(received_target_angle-1024)*0.1;
+				received_traget_angle_f=(float)received_target_angle;
+				GM6020.Set_Angle+=(received_traget_angle_f-1024)*0.1;
 				
 				if(GM6020.Set_Angle>=8192){
 					GM6020.Set_Angle=0;

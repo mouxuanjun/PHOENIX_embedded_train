@@ -970,6 +970,16 @@
               <FileType>1</FileType>
               <FilePath>..\User\usb_handel.c</FilePath>
             </File>
+            <File>
+              <FileName>Remote_Control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Remote_Control.c</FilePath>
+            </File>
+            <File>
+              <FileName>Remote_Control.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\Remote_Control.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

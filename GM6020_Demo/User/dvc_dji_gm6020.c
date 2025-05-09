@@ -5,7 +5,7 @@ extern Moto_GM6020_t GM6020;
 #define CAN_CHASSIS_ALL_ID 0x1FF           //鏍囪瘑绗︾殑id
 #define CHASSIS_CAN hcan1
 uint8_t chassis_can_send_data[8];
-uint8_t test2=0;
+//uint8_t test2=0;
 /**
  * @file GM6020.c
  * @brief GM6020接受反馈报文函数
@@ -20,7 +20,7 @@ void Get_GM6020_Motor_Message(uint32_t StdId,uint8_t rx_data[8])
     {
         case 0x205://反馈报文标识符
         {
-            test2++;
+            //test2++;
  					  GM6020.rotor_angle    = ((rx_data[0] << 8) | rx_data[1]);//接收机械角度（16bit）
             GM6020.rotor_speed    = ((rx_data[2] << 8) | rx_data[3]);//接收转速（16bit）
             GM6020.torque_current = ((rx_data[4] << 8) | rx_data[5]);//接收实际转矩

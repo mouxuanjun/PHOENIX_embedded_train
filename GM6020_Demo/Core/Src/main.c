@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include "dri_can.h"
 #include "dvc_dji_gm6020.h"
+#include "Remote_Control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,14 +50,14 @@ Moto_GM6020_t GM6020;
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint8_t sbus_buf[18];//遥控器的数据是18字节的
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
-
+void HAL_UART_RxCpltcallback(UART_HandleTypeDef *UartHandle);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -88,18 +89,19 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_CAN1_Init();
-  MX_USART1_UART_Init();
   MX_USART6_UART_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   CAN_Filter_Init();
   MX_USB_DEVICE_Init();
+	RC_init();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

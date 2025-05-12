@@ -53,6 +53,12 @@
 /* USER CODE BEGIN Variables */
 //extern QueueHandle_t Usb_quene;
 extern Moto_GM6020_t GM6020;
+extern PID PosePID_yaw;
+extern PID PosePID_pitch;
+
+extern PID VelPID_yaw;
+extern PID VelPID_pitch;
+
 //uint16_t target=100;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
@@ -221,7 +227,7 @@ void StartTask02(void const * argument)
 	  }
 		//GM6020.Set_Angle = generate_sine_target();
 		//float temp_result1=position_PID(target_position,GM6020.rotor_angle);
-		float temp_result1=position_PID(GM6020.Set_Angle,GM6020.rotor_angle);
+		float temp_result1=position_PID(GM6020.Set_Angle,GM6020.rotor_angle,PosePID_pitch);
 		
 		if(emergence_stop!=1){
     xStatus2 = xQueueSend(Usb_queneHandle, &temp_result1, xTicksToWait);
@@ -263,7 +269,7 @@ void StartTask03(void const * argument)
 			received_target_velocity=(received_target_velocity>=340)?340:received_target_velocity;
 			received_target_velocity=(received_target_velocity<=-340)?-340:received_target_velocity;
 			
-      float temp_result2 = velocity_PID(received_target_velocity, GM6020.rotor_speed);
+      float temp_result2 = velocity_PID(received_target_velocity, GM6020.rotor_speed,VelPID_pitch);
         //float temp_result2 = velocity_PID(GM6020.Set_Speed, GM6020.rotor_speed);
       
       // temp_result2 （目标电压）需要转换类型。

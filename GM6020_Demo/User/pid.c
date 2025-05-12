@@ -32,9 +32,11 @@
 
 //P,I,D,F
 //PID PosePID={0.054,0,0.0428,0};
-PID PosePID={0.0758,0,0.079,0};
+PID PosePID_yaw={0.0758,0,0.079,0};
+PID PosePID_pitch={0.0758,0,0.079,0};
 //PID VelPID={74,565,0};
-PID VelPID={63,521,0,0};
+PID VelPID_yaw={63,521,0,0};
+PID VelPID_pitch={63,521,0,0};
 
 
 
@@ -76,63 +78,63 @@ float wrap_error(float target, float measured) {
     return error;
 }
 
-float position_PID(float target, float current) {
+float position_PID(float target, float current,PID PosePID) {
 	  static uint32_t past;
 		uint32_t now = xTaskGetTickCount();
 		//dt1=(now-past)*(1.0 / configTICK_RATE_HZ);
 	  past=now;
-	  static float integral = 0;//静态变量生命周期能一直持续，所以不会被重复赋值为0
-    static float last_error = 0;
-	  static float last_target=0;//使用微分前馈
-	  feedforward=(target - last_target);
+	  PosePID.integral = 0;//改用结构体
+    PosePID.last_error = 0;
+	  PosePID.last_target=0;//使用微分前馈
+	  feedforward=(target - PosePID.last_target);
     // 角度解算
     //float current_angle = current * (360.0f / ENCODER_MAX); // 转换为角度值
     //float target_angle = target * (360.0f / ENCODER_MAX);
     // 过零处理
     float error = wrap_error(target, current);
    // error = target - current;
-    integral += error ;
+    PosePID.integral += error ;
 	//积分限幅
-	  integral=(integral<INTERGEL_MIN)?INTERGEL_MIN:integral;
-	  integral=(integral>INTERGEL_MAX)?INTERGEL_MAX:integral;
-    float derivative = (error - last_error) ;
+	  PosePID.integral=(PosePID.integral<INTERGEL_MIN)?INTERGEL_MIN:PosePID.integral;
+	  PosePID.integral=(PosePID.integral>INTERGEL_MAX)?INTERGEL_MAX:PosePID.integral;
+    PosePID.derivative = (error - PosePID.last_error) ;
     
-    last_error = error;
+    PosePID.last_error = error;
 	//死区，看情况启用if(error<=0.01){
 		//error=0;
 		//}
-	  float result = PosePID.P*error + PosePID.I*integral + PosePID.D*derivative;
+	  float result = PosePID.P*error + PosePID.I*PosePID.integral + PosePID.D*PosePID.derivative;
 		
     return result;
 }
 
 
-float velocity_PID(float target, float current) {
+float velocity_PID(float target, float current,PID VelPID) {
 	  static uint32_t Vpast;
 	  uint32_t now = xTaskGetTickCount();
-		dt2=(now-Vpast)*(1.0 / configTICK_RATE_HZ);
+	  dt2=(now-Vpast)*(1.0 / configTICK_RATE_HZ);//dt就默认同环的所有电机共享了，这个后面肯定要改，但是我懒
 	  Vpast=now;
-    static float vintegral = 0;
-    static float vlast_error = 0;
+    VelPID.integral = 0;
+    VelPID.last_error = 0;
     
     float error = target - current;
 	  if(fabs(error)<=0.01){
 		  error=0;
 		}
-    vintegral += error * dt2;
+    VelPID.integral += error * dt2;
 		//积分限幅
-	  vintegral=(vintegral<INTERGEL_MIN)?INTERGEL_MIN:vintegral;
-	  vintegral=(vintegral>INTERGEL_MAX)?INTERGEL_MAX:vintegral;
-    float vderivative = (error - vlast_error)/ dt2;
+	  VelPID.integral=(VelPID.integral<INTERGEL_MIN)?INTERGEL_MIN:VelPID.integral;
+	  VelPID.integral=(VelPID.integral>INTERGEL_MAX)?INTERGEL_MAX:VelPID.integral;
+    VelPID.derivative = (error -  VelPID.last_error)/ dt2;
     
-    vlast_error = error;
-    float vresult = VelPID.P*error + VelPID.I*vintegral + VelPID.D*vderivative;
+    VelPID.last_error = error;
+    float vresult = VelPID.P*error + VelPID.I*VelPID.integral + VelPID.D*VelPID.derivative;
 		//return vresult;
     return vresult+(feedforward*VelPID.F);
 }
 
 
-float velocity_PID_incre(float target, float current) {
+float velocity_PID_incre(float target, float current,PID VelPID) {
 	static uint32_t Vpast;
 	  uint32_t now = xTaskGetTickCount();
 		dt2=(now-Vpast)*(1.0 / configTICK_RATE_HZ);
@@ -155,13 +157,7 @@ float velocity_PID_incre(float target, float current) {
     float vresult = VelPID.P*error + VelPID.I*vintegral + VelPID.D*vderivative;
     return vresult;
 }
-/*
-float PID_Control(float target,float pos_current,float vel_current){
-	float temp_result1=position_PID(target,pos_current);
-	float temp_result2=velocity_PID(temp_result1,vel_current);
-	xQueueSendFromISR(Usb_quene, &temp_result1, NULL);
-	
-}*/
+
 
 
 /**

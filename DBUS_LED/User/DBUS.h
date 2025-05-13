@@ -18,7 +18,7 @@ typedef struct{
 		int16_t mouse_x;
 		int16_t mouse_y;
 		char mouse_press_l;
-	  char mouse_press_r;
+	    char mouse_press_r;
 	} mouse;
 	
 	struct{

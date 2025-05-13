@@ -97,7 +97,7 @@ int main(void)
   MX_CAN1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	//这里一定要初始化，不然识别不到USB！！！
+	//这里�?定要初始化，不然识别不到USB！！�?
 	MX_USB_DEVICE_Init(); 
   /* USER CODE END 2 */
 

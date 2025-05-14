@@ -35,6 +35,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 Moto_GM6020_t GM6020;
+Moto_GM6020_t GM6020_pitch;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/

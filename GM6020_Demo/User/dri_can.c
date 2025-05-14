@@ -1,11 +1,22 @@
+#include "task.h"  
 #include "dri_can.h"
+
+
+
+
+#define Motor_1_ID 0x205
+#define Motor_2_ID 0x206
 
 /**
  * @file BSP_Can.c
- * @brief ³õÊ¼»¯É¸Ñ¡Æ÷£¨ÕâÀïÏÔÂëºÍÑÚÂë¶¼ÊÇ0x0000£©
+ * @brief åˆå§‹åŒ–ç­›é€‰å™¨ï¼ˆè¿™é‡Œæ©ç å’Œæ˜¾ç éƒ½æ˜¯0ï¼‰
  * @author HWX
- * @date 2024/10/20
+ * @editor CGH
+ * @date 2025/5/14
  */
+uint8_t CAN_Input;//canæ¥æ”¶ä¸­æ–­æ ‡å¿—ä½
+CAN_RxHeaderTypeDef rx_header;//å°†å…¶ä½œä¸ºå…¬å…±ä½¿ç”¨
+uint8_t rx_data[8];//æ¥æ”¶ï¼ˆRXï¼‰ç¼“å†²å™¨
 void CAN_Filter_Init(void)
 {
     CAN_FilterTypeDef can1_filter_st;
@@ -21,34 +32,36 @@ void CAN_Filter_Init(void)
     can1_filter_st.FilterBank = 0;
     can1_filter_st.SlaveStartFilterBank = 14;
 	
-	//Ê¹ÄÜCANÍ¨µÀ
-    if (HAL_CAN_ConfigFilter(&hcan1, &can1_filter_st) != HAL_OK)// ÅäÖÃ CAN1 ¹ıÂËÆ÷
+	//ä½¿èƒ½CANé€šé“
+    if (HAL_CAN_ConfigFilter(&hcan1, &can1_filter_st) != HAL_OK)// é…ç½®CAN1è¿‡æ»¤å™¨
     {
-        Error_Handler();  // ´¦Àí´íÎó
+        Error_Handler();  // å¤„ç†é”™è¯¯Â·
     }
-    if (HAL_CAN_Start(&hcan1) != HAL_OK)// Æô¶¯ CAN1
+    if (HAL_CAN_Start(&hcan1) != HAL_OK)// å¯åŠ¨CAN1
     {
         Error_Handler();
     }
-    if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)// Ê¹ÄÜ CAN1 ½ÓÊÕ FIFO0 ÏûÏ¢ÖĞ¶Ï
+    if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)// ä½¿èƒ½ CAN1 æ¥å— FIFO0 ä¸­æ–­
     {
         Error_Handler();
     }
 }
 
 /**
- * @brief CAN½ÓÊÜÖĞ¶Ïº¯Êı
- * @param hcan CANÍ¨µÀ
+ * @brief CANæ¥æ”¶ä¸­æ–­å‡½æ•°
+ * @param hcan CANé€šé“
  */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
-    CAN_RxHeaderTypeDef rx_header;
+    
     uint8_t rx_data[8];
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
     if(hcan->Instance == CAN1){
-			if(rx_header.StdId == 0x205){//å¼ºçƒˆå»ºè®®è¿™é‡Œæ”¹æˆç”¨å®šä¹‰ï¼Œä¸ç„¶ä¿®æ”¹å¤ªéº»çƒ¦äº†
-				
-		    Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
+			if(rx_header.StdId == Motor_1_ID|rx_header.StdId == Motor_2_ID){//è¿™é‡Œæ”¹æˆç”¨å®šä¹‰ï¼Œä¿®æ”¹å¤ªéº»çƒ¦äº†
+				CAN_Input=1;//æ ‡å¿—ä½ ç½®1
+				// å‘é€é€šçŸ¥å”¤é†’ä»»åŠ¡
+				xTaskNotifyGive(xTaskHCAN_input_taskHandleandle);//å¤´æ–‡ä»¶åœ¨task.hé‡Œ
+		    
 		 }
     }
 }

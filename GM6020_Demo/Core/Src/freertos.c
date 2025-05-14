@@ -53,17 +53,22 @@
 /* USER CODE BEGIN Variables */
 //extern QueueHandle_t Usb_quene;
 extern Moto_GM6020_t GM6020;
+extern Moto_GM6020_t GM6020_pitch;
 extern PID PosePID_yaw;
 extern PID PosePID_pitch;
 
 extern PID VelPID_yaw;
 extern PID VelPID_pitch;
 
+extern CAN_RxHeaderTypeDef rx_header;//can总线接受的接收区头
+extern uint8_t rx_data[8];
+
 //uint16_t target=100;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 osThreadId GM6020_TaskHandle;
 osThreadId GM6020_Task_innHandle;
+osThreadId CAN_input_taskHandle;
 osMessageQId Usb_queneHandle;
 osMessageQId RCqueueHandle;
 
@@ -75,6 +80,7 @@ osMessageQId RCqueueHandle;
 void StartDefaultTask(void const * argument);
 void StartTask02(void const * argument);
 void StartTask03(void const * argument);
+void StartTask04(void const * argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -142,6 +148,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of GM6020_Task_inn */
   osThreadDef(GM6020_Task_inn, StartTask03, osPriorityNormal, 0, 512);
   GM6020_Task_innHandle = osThreadCreate(osThread(GM6020_Task_inn), NULL);
+
+  /* definition and creation of CAN_input_task */
+  osThreadDef(CAN_input_task, StartTask04, osPriorityIdle, 0, 128);
+  CAN_input_taskHandle = osThreadCreate(osThread(CAN_input_task), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -220,6 +230,36 @@ void StartTask02(void const * argument)
 				if(GM6020.Set_Angle<0){
 					GM6020.Set_Angle+=8191;
 				}
+			}
+			}
+				//////////pitch轴电机控制/////////////
+					//float target_position = generate_sine_target();
+		xStatus1 = xQueueReceive(RCqueueHandle, &temp_message, xTicksToWait);
+		  // 检查是否成功接收到数据
+    if (xStatus1 == pdPASS)
+    {
+		if(temp_message==MSG_MAGIC){
+				xQueueReceive(RCqueueHandle, &temp_message, xTicksToWait);
+
+				if(temp_message==1){
+				Send_GM6020_Motor_Message(0x00, 0x00, 0x00, 0x00);
+					emergence_stop=1;
+				}else{
+					emergence_stop=0;
+				}
+				
+			}else if(temp_message==MSG_MAGIC2){
+				xQueueReceive(RCqueueHandle, &received_target_angle, xTicksToWait);
+				received_traget_angle_f=(float)received_target_angle;
+				GM6020_pitch.Set_Angle+=(received_traget_angle_f-1024)*0.1;
+				
+				
+				if(GM6020_pitch.Set_Angle>=8192){
+					GM6020_pitch.Set_Angle=0;
+				}
+				if(GM6020_pitch.Set_Angle<0){
+					GM6020_pitch.Set_Angle+=8191;
+				}
 				
 			 }
 			
@@ -289,6 +329,27 @@ void StartTask03(void const * argument)
 		osDelay(1);
   }
   /* USER CODE END StartTask03 */
+}
+
+/* USER CODE BEGIN Header_StartTask04 */
+/**
+* @brief Function implementing the CAN_input_task thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask04 */
+void StartTask04(void const * argument)
+{
+  /* USER CODE BEGIN StartTask04 */
+  /* Infinite loop */
+  for(;;)
+  {
+		Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
+		// 任务内部阻塞等待通知
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY); // 阻塞直到收到通知
+    osDelay(1);
+  }
+  /* USER CODE END StartTask04 */
 }
 
 /* Private application code --------------------------------------------------*/

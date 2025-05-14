@@ -105,8 +105,16 @@ void pid_task(void const * argument){
 
 void status_pub_task(void const * argument){
   while(1){
-    USB_send_motor_status(&motor_status); // 发送电机状态
-    osDelay(10);
+    int target = pid_angle.target+((int)(dr16_data.channel_1/660.f*30));
+	if (target > 8191){
+		target -=8191;
+	}
+    else if (target<0){
+        target+=8191;
+	}
+    pid_angle.target = target;	
+	
+    osDelay(1);
   }
 
 }

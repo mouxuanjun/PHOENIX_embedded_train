@@ -1,0 +1,3 @@
+C:/Users/29812/Documents/GitHub/PHOENIX_embedded_train/DM4310/cmake-build-debug/CMakeFiles/DM4310.elf.dir
+C:/Users/29812/Documents/GitHub/PHOENIX_embedded_train/DM4310/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/29812/Documents/GitHub/PHOENIX_embedded_train/DM4310/cmake-build-debug/CMakeFiles/rebuild_cache.dir

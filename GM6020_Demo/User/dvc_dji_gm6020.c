@@ -1,5 +1,5 @@
 #include "dvc_dji_gm6020.h"
-
+#include "dri_can.h"
 HAL_StatusTypeDef can_1;
 extern Moto_GM6020_t GM6020;
 #define CAN_CHASSIS_ALL_ID 0x1FF           //标识符的id
@@ -25,6 +25,15 @@ void Get_GM6020_Motor_Message(uint32_t StdId,uint8_t rx_data[8])
             GM6020.rotor_speed    = ((rx_data[2] << 8) | rx_data[3]);//����ת�٣�16bit��
             GM6020.torque_current = ((rx_data[4] << 8) | rx_data[5]);//����ʵ��ת��
             GM6020.temp           =   rx_data[6];//���յ���¶ȣ�8bit��
+            break;
+        }
+				case Motor_2_ID:
+        {
+            //test2++;
+ 					  GM6020.rotor_angle    = ((rx_data[0] << 8) | rx_data[1]);//½ӊջúе½Ƕȣ¨16bit£©(神秘乱码）
+            GM6020.rotor_speed    = ((rx_data[2] << 8) | rx_data[3]);//½ӊ՗ª˙£¨16bit£©
+            GM6020.torque_current = ((rx_data[4] << 8) | rx_data[5]);//½ӊՊµ¼ʗª¾؍
+            GM6020.temp           =   rx_data[6];//½ӊյ绺΂¶ȣ¨8bit£©
             break;
         }
     }

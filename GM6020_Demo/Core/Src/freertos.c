@@ -358,10 +358,19 @@ void StartTask04(void const * argument)
   /* USER CODE BEGIN StartTask04 */
   /* Infinite loop */
   for(;;)
-  {
-		Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
-		// 任务内部阻塞等待通知
-		ulTaskNotifyTake(pdTRUE, portMAX_DELAY); // 阻塞直到收到通知
+  { 
+		// 等待信号标志位 0x1
+		osEvent evt = osSignalWait(0x1, osWaitForever);  // 永久阻塞直到信号到达
+   
+    if (evt.status == osEventSignal) {
+      /* 信号到达后的处理流程 */
+      Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
+      
+      /* 处理完成后自动回到循环开头，再次进入阻塞 */
+    }
+		
+	
+		
     osDelay(1);
   }
   /* USER CODE END StartTask04 */

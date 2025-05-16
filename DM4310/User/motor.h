@@ -27,9 +27,9 @@ public:
     Motor();
     virtual void Set_Angle(float angle , float speed = 0) = 0;
     virtual void Set_Speed(float speed) = 0;
-    virtual void Pid_Update() = 0;
+    virtual void Pid_Update(float target) = 0;
 
-    void Set_Pid_Type(Pid_Type pid_type);
+    virtual void Set_Pid_Type(Pid_Type pid_type);
 
     virtual ~Motor() = 0;
 
@@ -39,8 +39,7 @@ public:
 private:
     Pid_Type pid_type;
 
-    PID* pid_speed = nullptr;
-    PID* pid_angle = nullptr;
+
 
 
 };

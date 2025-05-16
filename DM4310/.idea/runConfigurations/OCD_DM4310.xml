@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration name="OCD DM4310" type="com.jetbrains.cidr.embedded.openocd.conf.type" factoryName="com.jetbrains.cidr.embedded.openocd.conf.factory" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="DM4310" TARGET_NAME="DM4310.elf" version="1" RUN_TARGET_PROJECT_NAME="DM4310" RUN_TARGET_NAME="DM4310.elf">
+  <configuration default="false" name="OCD DM4310" type="com.jetbrains.cidr.embedded.openocd.conf.type" factoryName="com.jetbrains.cidr.embedded.openocd.conf.factory" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="DM4310" TARGET_NAME="DM4310.elf" CONFIG_NAME="Debug" version="1" RUN_TARGET_PROJECT_NAME="DM4310" RUN_TARGET_NAME="DM4310.elf">
     <openocd version="1" gdb-port="3333" telnet-port="4444" board-config="C:\Users\29812\Documents\GitHub\PHOENIX_embedded_train\DM4310\stm32f4discovery.cfg" reset-type="INIT" download-type="UPDATED_ONLY">
       <debugger kind="GDB" isBundled="true" />
     </openocd>

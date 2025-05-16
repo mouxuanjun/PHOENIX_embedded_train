@@ -27,11 +27,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="340ceb40-4673-4d67-bf11-cad6c8401b81" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/User/motor_dm.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PID/Core/Src/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/../PID/Core/Src/main.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PID/Core/Src/stm32f4xx_it.c" beforeDir="false" afterPath="$PROJECT_DIR$/../PID/Core/Src/stm32f4xx_it.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PID/MDK-ARM/PID.uvoptx" beforeDir="false" afterPath="$PROJECT_DIR$/../PID/MDK-ARM/PID.uvoptx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PID/MDK-ARM/PID.uvprojx" beforeDir="false" afterPath="$PROJECT_DIR$/../PID/MDK-ARM/PID.uvprojx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/OCD_DM4310.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/OCD_DM4310.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User/motor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/User/motor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User/motor.h" beforeDir="false" afterPath="$PROJECT_DIR$/User/motor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User/motor_dm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/User/motor_dm.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User/motor_dm.h" beforeDir="false" afterPath="$PROJECT_DIR$/User/motor_dm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User/pid.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/User/pid.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User/pid.h" beforeDir="false" afterPath="$PROJECT_DIR$/User/pid.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User/task_cpp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/User/task_cpp.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/DM4310.elf.dir/User/motor.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/DM4310.elf.dir/User/motor.cpp.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/DM4310.elf.dir/User/motor_dm.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/DM4310.elf.dir/User/motor_dm.cpp.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/DM4310.elf.dir/User/pid.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/DM4310.elf.dir/User/pid.cpp.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/DM4310.elf.dir/User/task_cpp.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/DM4310.elf.dir/User/task_cpp.cpp.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/DM4310.bin" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/DM4310.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/DM4310.elf" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/DM4310.elf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/DM4310.hex" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/DM4310.hex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/DM4310.map" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/DM4310.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stm32f4discovery.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/stm32f4discovery.cfg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +73,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;OpenOCD 下载并运行.OCD DM4310.executor&quot;: &quot;Debug&quot;,
     &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
@@ -79,11 +94,6 @@
   }
 }</component>
   <component name="RunManager" selected="OpenOCD 下载并运行.OCD DM4310">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="DM4310.elf" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="DM4310" TARGET_NAME="DM4310.elf" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="DM4310" RUN_TARGET_NAME="DM4310.elf">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -111,6 +121,17 @@
       <workItem from="1747202588330" duration="5285000" />
       <workItem from="1747211039097" duration="267000" />
       <workItem from="1747211332171" duration="5208000" />
+      <workItem from="1747230323427" duration="1750000" />
+      <workItem from="1747235596038" duration="430000" />
+      <workItem from="1747239456094" duration="2305000" />
+      <workItem from="1747283145711" duration="994000" />
+      <workItem from="1747298230569" duration="3411000" />
+      <workItem from="1747305929192" duration="19000" />
+      <workItem from="1747306016618" duration="3621000" />
+      <workItem from="1747314462420" duration="5002000" />
+      <workItem from="1747368118303" duration="2787000" />
+      <workItem from="1747373531458" duration="672000" />
+      <workItem from="1747380948141" duration="22952000" />
     </task>
     <servers />
   </component>

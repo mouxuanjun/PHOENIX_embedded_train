@@ -2,6 +2,8 @@
   <dictionary name="project">
     <words>
       <w>hcan</w>
+      <w>pbuf</w>
+      <w>vbuf</w>
     </words>
   </dictionary>
 </component>

@@ -5,14 +5,14 @@
 
 Motor::Motor()
 {
-    pid_type = NONE_PID;
-    pid_speed = nullptr;
-    pid_angle = nullptr;
+
+        pid_type = NONE_PID;
 }
 
 void Motor::Set_Pid_Type(Pid_Type pid_type)
 {
     this->pid_type = pid_type;
+
 }
 
 Motor::~Motor()

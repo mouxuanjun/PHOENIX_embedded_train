@@ -13,10 +13,12 @@ extern "C"
 class PID
 {
 public:
+
     PID(float kp ,float ki , float kd ,float dt ,float target);
     void Pid_Update(float current_value , float target_value);
     void Set_Max_Output(float max_output);
     void Set_Max_Integral_Output(float Max_Integral_Limit);
+    void Set_Parameters(float kp ,float ki , float kd ,float dt );
     //积分分离段
     void Enable_Integral_Separation(float Integral_Separation_Threshold);
     void Disable_Integral_Separation();
@@ -30,11 +32,14 @@ public:
     void Enable_Variable_Speed_Integral(float Variable_Speed_Integral_Lower_Limit , float Variable_Speed_Integral_Upper_Limit , float alpha_e);
     void Disable_Variable_Speed_Integral();
     //过零保护段
-    void Enable_ZeroCrossingProtection(float ZeroCrossingProtection_Threshold);
+    void Enable_ZeroCrossingProtection(float ZeroCrossingProtection_Threshold = 3.1415926f);
     void Disable_ZeroCrossingProtection();
     //微分先行段
     void Enable_Differential_First();
     void Disable_Differential_First();
+
+
+    float Get_Output() const;
     ~PID() = default;
 
 private:

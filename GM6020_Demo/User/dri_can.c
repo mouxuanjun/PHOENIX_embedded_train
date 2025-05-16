@@ -1,3 +1,4 @@
+#include "freertos.h"
 #include "task.h"  
 #include "dri_can.h"
 
@@ -14,6 +15,8 @@
  * @editor CGH
  * @date 2025/5/14
  */
+ extern TaskHandle_t CAN_input_taskHandle; // 吃屎的freertos和cmsis混合API
+
 uint8_t CAN_Input;//can接收中断标志位
 CAN_RxHeaderTypeDef rx_header;//将其作为公共使用
 uint8_t rx_data[8];//接收（RX）缓冲器
@@ -54,13 +57,13 @@ void CAN_Filter_Init(void)
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
     
-    uint8_t rx_data[8];
+    //uint8_t rx_data[8];
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
     if(hcan->Instance == CAN1){
-			if(rx_header.StdId == Motor_1_ID|rx_header.StdId == Motor_2_ID){//这里改成用定义，修改太麻烦了
+			if((rx_header.StdId == Motor_1_ID)||(rx_header.StdId == Motor_2_ID)){//这里改成用定义，修改太麻烦了
 				CAN_Input=1;//标志位 置1
 				// 发送通知唤醒任务
-				xTaskNotifyGive(xTaskHCAN_input_taskHandleandle);//头文件在task.h里
+				xTaskNotifyGiveFromISR(CAN_input_taskHandle,&xHigherPriorityTaskWoken );//头文件在task.h里
 		    
 		 }
     }

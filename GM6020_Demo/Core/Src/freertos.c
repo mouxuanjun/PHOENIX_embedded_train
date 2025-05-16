@@ -41,7 +41,8 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define MSG_MAGIC 0x00FF1234    //消息头用于分别数据，此处表示左开关
-#define MSG_MAGIC2 0x00FF1235   //用于分别数据，表示是yaw轴
+#define MSG_MAGIC2 0x00FF1235//用于分别数据，表示是yaw轴
+#define MSG_MAGIC3 0x00FF1236//pitch轴
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -248,7 +249,7 @@ void StartTask02(void const * argument)
 					emergence_stop=0;
 				}
 				
-			}else if(temp_message==MSG_MAGIC2){
+			}else if(temp_message==MSG_MAGIC3){
 				xQueueReceive(RCqueueHandle, &received_target_angle, xTicksToWait);
 				received_traget_angle_f=(float)received_target_angle;
 				GM6020_pitch.Set_Angle+=(received_traget_angle_f-1024)*0.1;
@@ -268,9 +269,12 @@ void StartTask02(void const * argument)
 		//GM6020.Set_Angle = generate_sine_target();
 		//float temp_result1=position_PID(target_position,GM6020.rotor_angle);
 		float temp_result1=position_PID(GM6020.Set_Angle,GM6020.rotor_angle,PosePID_pitch);
-		
+		float temp_result2=position_PID(GM6020_pitch.Set_Angle,GM6020_pitch.rotor_angle,PosePID_pitch);
 		if(emergence_stop!=1){
+			xStatus2 = osMessagePut(Usb_queneHandle, MSG_MAGIC, xTicksToWait);
     xStatus2 = xQueueSend(Usb_queneHandle, &temp_result1, xTicksToWait);
+			xStatus2 = osMessagePut(Usb_queneHandle, MSG_MAGIC2, xTicksToWait);
+			xStatus2 = xQueueSend(Usb_queneHandle, &temp_result2, xTicksToWait);
 		}
     if (xStatus2 != pdPASS)
     {
@@ -293,14 +297,22 @@ void StartTask02(void const * argument)
 void StartTask03(void const * argument)
 {
   /* USER CODE BEGIN StartTask03 */
-	float received_target_velocity; // 用于存储从队列接收到的目标速度2
+	float received_target_velocity;
+  float received_target_velocity2;	// 用于存储从队列接收到的目标速度2
   BaseType_t xStatus;             // 用于检查 xQueueReceive 的返回值
-	
+	uint32_t temp_message;
   const TickType_t xTicksToWait = portMAX_DELAY; // 设置等待时间
   /* Infinite loop */
   for(;;)
   {
-		xStatus = xQueueReceive(Usb_queneHandle, &received_target_velocity, xTicksToWait);
+		xStatus = xQueueReceive(Usb_queneHandle, &temp_message, xTicksToWait);
+		if(temp_message==MSG_MAGIC){
+			xQueueReceive(Usb_queneHandle, &received_target_velocity, xTicksToWait);
+			xQueueReceive(Usb_queneHandle, &temp_message, xTicksToWait);
+			if(temp_message==MSG_MAGIC2){
+				xQueueReceive(Usb_queneHandle, &received_target_velocity2, xTicksToWait);
+			}
+		}
 		  // 检查是否成功接收到数据
     if (xStatus == pdPASS)
     {
@@ -309,6 +321,9 @@ void StartTask03(void const * argument)
 			received_target_velocity=(received_target_velocity>=340)?340:received_target_velocity;
 			received_target_velocity=(received_target_velocity<=-340)?-340:received_target_velocity;
 			
+			received_target_velocity2=(received_target_velocity2>=340)?340:received_target_velocity2;
+			received_target_velocity2=(received_target_velocity2<=-340)?-340:received_target_velocity2;
+			float temp_result = velocity_PID(received_target_velocity, GM6020.rotor_speed,VelPID_yaw);
       float temp_result2 = velocity_PID(received_target_velocity, GM6020.rotor_speed,VelPID_pitch);
         //float temp_result2 = velocity_PID(GM6020.Set_Speed, GM6020.rotor_speed);
       

@@ -1,7 +1,7 @@
 #include "freertos.h"
 #include "task.h"  
 #include "dri_can.h"
-
+#include "cmsis_os.h"
 
 
 
@@ -62,8 +62,8 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     if(hcan->Instance == CAN1){
 			if((rx_header.StdId == Motor_1_ID)||(rx_header.StdId == Motor_2_ID)){//这里改成用定义，修改太麻烦了
 				CAN_Input=1;//标志位 置1
-				// 发送通知唤醒任务
-				xTaskNotifyGiveFromISR(CAN_input_taskHandle,&xHigherPriorityTaskWoken );//头文件在task.h里
+				// 发送通知唤醒任务（CMSIS
+				osSignalSet(CAN_input_taskHandle, 0x1); 
 		    
 		 }
     }

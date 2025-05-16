@@ -8,7 +8,7 @@
 //接收端在读取消息时，需要将 uint32_t 转换回原始数据类型。
 #define MSG_MAGIC 0x00FF1234    //消息头用于分别数据，此处表示
 #define MSG_MAGIC2 0x00FF1235   //用于分别数据，表示是yaw轴  
-
+#define MSG_MAGIC3 0x00FF1236   //pitch轴
 
 
 
@@ -64,4 +64,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle){//传入的参数�
 		osMessagePut(RCqueueHandle, MSG_MAGIC, 0);
 	//传递左开关
 	  osMessagePut(RCqueueHandle, (uint32_t)ctl.rc.sL, 0);
+			//pitch轴消息头
+		osMessagePut(RCqueueHandle, MSG_MAGIC3, 0);
+	//传递pitch轴数据(右摇杆竖向)
+	  osMessagePut(RCqueueHandle, (uint32_t)ctl.rc.ch1, 0);//施工中
 }

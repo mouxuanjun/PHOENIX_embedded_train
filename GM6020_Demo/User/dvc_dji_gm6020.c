@@ -2,6 +2,7 @@
 #include "dri_can.h"
 HAL_StatusTypeDef can_1;
 extern Moto_GM6020_t GM6020;
+extern Moto_GM6020_t GM6020_pitch;
 #define CAN_CHASSIS_ALL_ID 0x1FF           //æ ‡è¯†ç¬¦çš„id
 #define CHASSIS_CAN hcan1
 uint8_t chassis_can_send_data[8];
@@ -12,13 +13,14 @@ uint8_t chassis_can_send_data[8];
  * @param StdId µç»úID
  * @param rx_data CANÍ¨µÀÊÕµ½µÄÊý¾Ý
  * @author HWX
- * @date 2024/10/20
+ * @editor CGH
+ * @date 2025/5/16
  */
 void Get_GM6020_Motor_Message(uint32_t StdId,uint8_t rx_data[8])
 {
     switch(StdId)//½ÓÊÕÖ¸¶¨µç»ú·´À¡µÄÐÅÏ¢
     {
-        case 0x205://·´À¡±¨ÎÄ±êÊ¶·û
+        case Motor_1_ID://·´À¡±¨ÎÄ±êÊ¶·û
         {
             //test2++;
  					  GM6020.rotor_angle    = ((rx_data[0] << 8) | rx_data[1]);//½ÓÊÕ»úÐµ½Ç¶È£¨16bit£©
@@ -30,10 +32,10 @@ void Get_GM6020_Motor_Message(uint32_t StdId,uint8_t rx_data[8])
 				case Motor_2_ID:
         {
             //test2++;
- 					  GM6020.rotor_angle    = ((rx_data[0] << 8) | rx_data[1]);//Â½ÓŠÕ»ÃºÐµÂ½Ç¶È£Â¨16bitÂ£Â©(ç¥žç§˜ä¹±ç ï¼‰
-            GM6020.rotor_speed    = ((rx_data[2] << 8) | rx_data[3]);//Â½ÓŠÕ—ÂªË™Â£Â¨16bitÂ£Â©
-            GM6020.torque_current = ((rx_data[4] << 8) | rx_data[5]);//Â½ÓŠÕŠÂµÂ¼Ê—ÂªÂ¾Ø
-            GM6020.temp           =   rx_data[6];//Â½ÓŠÕµç»ºÎ‚Â¶È£Â¨8bitÂ£Â©
+ 					  GM6020_pitch.rotor_angle    = ((rx_data[0] << 8) | rx_data[1]);//Â½ÓŠÕ»ÃºÐµÂ½Ç¶È£Â¨16bitÂ£Â©(ç¥žç§˜ä¹±ç ï¼‰
+            GM6020_pitch.rotor_speed    = ((rx_data[2] << 8) | rx_data[3]);//Â½ÓŠÕ—ÂªË™Â£Â¨16bitÂ£Â©
+            GM6020_pitch.torque_current = ((rx_data[4] << 8) | rx_data[5]);//Â½ÓŠÕŠÂµÂ¼Ê—ÂªÂ¾Ø
+            GM6020_pitch.temp           =   rx_data[6];//Â½ÓŠÕµç»ºÎ‚Â¶È£Â¨8bitÂ£Â©
             break;
         }
     }

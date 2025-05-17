@@ -38,6 +38,8 @@ void Get_GM6020_Motor_Message(uint32_t StdId,uint8_t rx_data[8])
             GM6020_pitch.temp           =   rx_data[6];//½ӊյ绺΂¶ȣ¨8bit£©
             break;
         }
+				
+					
     }
 }
 

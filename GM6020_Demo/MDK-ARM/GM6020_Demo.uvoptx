@@ -153,77 +153,27 @@
           <Name>-U-O142 -O2254 -S0 -C0 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC800 -FN1 -FF0STM32F4xx_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32F407IGHx$CMSIS\Flash\STM32F4xx_1024.FLM)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>37</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134220506</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\User\dvc_dji_gm6020.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\GM6020_Demo\../User/dvc_dji_gm6020.c\37</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>367</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134232450</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Core/Src/freertos.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\GM6020_Demo\../Core/Src/freertos.c\367</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>366</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>../Core/Src/freertos.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
-          <Type>0</Type>
-          <LineNumber>27</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\User\dvc_dji_gm6020.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>VelPID</ItemText>
+          <ItemText>PosePID_yaw</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>PosePID_pitch</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>VelPID_yaw</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>VelPID_pitch</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -250,167 +200,162 @@
         <Ww>
           <count>4</count>
           <WinNumber>2</WinNumber>
-          <ItemText>PosePID</ItemText>
+          <ItemText>motor_command</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>2</WinNumber>
-          <ItemText>PosePID</ItemText>
+          <ItemText>error</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>2</WinNumber>
-          <ItemText>motor_command</ItemText>
+          <ItemText>test_velocity</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>2</WinNumber>
-          <ItemText>error</ItemText>
+          <ItemText>test_velocity</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>2</WinNumber>
-          <ItemText>VelPID</ItemText>
+          <ItemText>dt2</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>2</WinNumber>
-          <ItemText>test_velocity</ItemText>
+          <ItemText>error</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>2</WinNumber>
-          <ItemText>test_velocity</ItemText>
+          <ItemText>error</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>2</WinNumber>
-          <ItemText>dt2</ItemText>
+          <ItemText>error</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>2</WinNumber>
-          <ItemText>error</ItemText>
+          <ItemText>target</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>2</WinNumber>
-          <ItemText>error</ItemText>
+          <ItemText>vlast_error,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>2</WinNumber>
-          <ItemText>error</ItemText>
+          <ItemText>vlast_error</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>2</WinNumber>
-          <ItemText>target</ItemText>
+          <ItemText>temp_result2</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>2</WinNumber>
-          <ItemText>vlast_error,0x0A</ItemText>
+          <ItemText>\\GM6020_Demo\../Core/Src/main.c\GM6020.rotor_speed</ItemText>
         </Ww>
         <Ww>
           <count>17</count>
           <WinNumber>2</WinNumber>
-          <ItemText>vlast_error</ItemText>
+          <ItemText>\\GM6020_Demo\../User/pid.c\VelPID.I</ItemText>
         </Ww>
         <Ww>
           <count>18</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp_result2</ItemText>
+          <ItemText>\\GM6020_Demo\../User/pid.c\VelPID.I</ItemText>
         </Ww>
         <Ww>
           <count>19</count>
           <WinNumber>2</WinNumber>
-          <ItemText>\\GM6020_Demo\../Core/Src/main.c\GM6020.rotor_speed</ItemText>
+          <ItemText>vintegral</ItemText>
         </Ww>
         <Ww>
           <count>20</count>
           <WinNumber>2</WinNumber>
-          <ItemText>\\GM6020_Demo\../User/pid.c\VelPID.I</ItemText>
+          <ItemText>vintegral</ItemText>
         </Ww>
         <Ww>
           <count>21</count>
           <WinNumber>2</WinNumber>
-          <ItemText>\\GM6020_Demo\../User/pid.c\VelPID.I</ItemText>
+          <ItemText>motor_command</ItemText>
         </Ww>
         <Ww>
           <count>22</count>
           <WinNumber>2</WinNumber>
-          <ItemText>vintegral</ItemText>
+          <ItemText>ctl,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>23</count>
           <WinNumber>2</WinNumber>
-          <ItemText>vintegral</ItemText>
+          <ItemText>test2</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
           <WinNumber>2</WinNumber>
-          <ItemText>motor_command</ItemText>
+          <ItemText>received_target_angle,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>25</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ctl,0x0A</ItemText>
+          <ItemText>received_target_angle</ItemText>
         </Ww>
         <Ww>
           <count>26</count>
           <WinNumber>2</WinNumber>
-          <ItemText>test2</ItemText>
+          <ItemText>\\GM6020_Demo\../Core/Src/freertos.c\StartTask02\received_target_angle</ItemText>
         </Ww>
         <Ww>
           <count>27</count>
           <WinNumber>2</WinNumber>
-          <ItemText>received_target_angle,0x0A</ItemText>
+          <ItemText>received_target_velocity</ItemText>
         </Ww>
         <Ww>
           <count>28</count>
           <WinNumber>2</WinNumber>
-          <ItemText>received_target_angle</ItemText>
+          <ItemText>test3</ItemText>
         </Ww>
         <Ww>
           <count>29</count>
           <WinNumber>2</WinNumber>
-          <ItemText>\\GM6020_Demo\../Core/Src/freertos.c\StartTask02\received_target_angle</ItemText>
+          <ItemText>temp_result2,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>30</count>
           <WinNumber>2</WinNumber>
-          <ItemText>received_target_velocity</ItemText>
+          <ItemText>temp_result2</ItemText>
         </Ww>
         <Ww>
           <count>31</count>
           <WinNumber>2</WinNumber>
-          <ItemText>test3</ItemText>
+          <ItemText>GM6020_pitch,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>32</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp_result2,0x0A</ItemText>
+          <ItemText>rx_header</ItemText>
         </Ww>
         <Ww>
           <count>33</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp_result2</ItemText>
+          <ItemText>StdId</ItemText>
         </Ww>
         <Ww>
           <count>34</count>
           <WinNumber>2</WinNumber>
-          <ItemText>GM6020_pitch</ItemText>
+          <ItemText>temp3</ItemText>
         </Ww>
         <Ww>
           <count>35</count>
           <WinNumber>2</WinNumber>
-          <ItemText>rx_header</ItemText>
-        </Ww>
-        <Ww>
-          <count>36</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>StdId</ItemText>
+          <ItemText>GM6020_pitch</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>

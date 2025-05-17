@@ -21,8 +21,8 @@ typedef struct
 }PID;
 
 
-float position_PID(float target, float current,PID PosePID);
-float velocity_PID(float target, float current,PID VelPID);
+float position_PID(float target, float current,PID *PosePID);
+float velocity_PID(float target, float current,PID *VelPID);
 void init_sine_generator(float initial_phase_rad);
 float generate_sine_target(void);
 #endif

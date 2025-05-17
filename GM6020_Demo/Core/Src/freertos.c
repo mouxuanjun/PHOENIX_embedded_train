@@ -268,8 +268,8 @@ void StartTask02(void const * argument)
 	  }
 		//GM6020.Set_Angle = generate_sine_target();
 		//float temp_result1=position_PID(target_position,GM6020.rotor_angle);
-		float temp_result1=position_PID(GM6020.Set_Angle,GM6020.rotor_angle,PosePID_yaw);
-		float temp_result2=position_PID(GM6020_pitch.Set_Angle,GM6020_pitch.rotor_angle,PosePID_pitch);
+		float temp_result1=position_PID(GM6020.Set_Angle,GM6020.rotor_angle,&PosePID_yaw);
+		float temp_result2=position_PID(GM6020_pitch.Set_Angle,GM6020_pitch.rotor_angle,&PosePID_pitch);
 		if(emergence_stop!=1){
 			xStatus2 = osMessagePut(Usb_queneHandle, MSG_MAGIC, xTicksToWait);
     xStatus2 = xQueueSend(Usb_queneHandle, &temp_result1, xTicksToWait);
@@ -297,8 +297,10 @@ void StartTask02(void const * argument)
 void StartTask03(void const * argument)
 {
   /* USER CODE BEGIN StartTask03 */
-	float received_target_velocity;
-  float received_target_velocity2;	// 用于存储从队列接收到的目标速度2
+	uint32_t received_target_velocity;
+	uint32_t received_target_velocity2;
+	float received_target_velocity_f;
+  float received_target_velocity2_f;	// 用于存储从队列接收到的目标速度2
   BaseType_t xStatus;             // 用于检查 xQueueReceive 的返回值
 	uint32_t temp_message;
   const TickType_t xTicksToWait = portMAX_DELAY; // 设置等待时间
@@ -308,9 +310,11 @@ void StartTask03(void const * argument)
 		xStatus = xQueueReceive(Usb_queneHandle, &temp_message, xTicksToWait);
 		if(temp_message==MSG_MAGIC){
 			xQueueReceive(Usb_queneHandle, &received_target_velocity, xTicksToWait);
+			received_target_velocity_f=(float)received_target_velocity;
 			xQueueReceive(Usb_queneHandle, &temp_message, xTicksToWait);
 			if(temp_message==MSG_MAGIC2){
 				xQueueReceive(Usb_queneHandle, &received_target_velocity2, xTicksToWait);
+				received_target_velocity2_f=(float)received_target_velocity2;
 			}
 		}
 		  // 检查是否成功接收到数据
@@ -318,20 +322,21 @@ void StartTask03(void const * argument)
     {
       // 成功接收到数据，现在 received_target_velocity 包含了 Task02 发送的值
       // 使用接收到的值作为速度PID的目标值
-			received_target_velocity=(received_target_velocity>=340)?340:received_target_velocity;
-			received_target_velocity=(received_target_velocity<=-340)?-340:received_target_velocity;
+			received_target_velocity_f=(received_target_velocity_f>=340)?340:received_target_velocity_f;
+			received_target_velocity_f=(received_target_velocity_f<=-340)?-340:received_target_velocity_f;
 			
-			received_target_velocity2=(received_target_velocity2>=340)?340:received_target_velocity2;
-			received_target_velocity2=(received_target_velocity2<=-340)?-340:received_target_velocity2;
-			float temp_result = velocity_PID(received_target_velocity, GM6020.rotor_speed,VelPID_yaw);
-      float temp_result2 = velocity_PID(received_target_velocity2, GM6020_pitch.rotor_speed,VelPID_pitch);
+			received_target_velocity2_f=(received_target_velocity2_f>=340)?340:received_target_velocity2_f;
+			received_target_velocity2_f=(received_target_velocity2_f<=-340)?-340:received_target_velocity2_f;
+			float temp_result = velocity_PID(received_target_velocity_f, GM6020.rotor_speed,&VelPID_yaw);
+      float temp_result2 = velocity_PID(received_target_velocity2_f, GM6020_pitch.rotor_speed,&VelPID_pitch);
         //float temp_result2 = velocity_PID(GM6020.Set_Speed, GM6020.rotor_speed);
       
       // temp_result2 （目标电压）需要转换类型。
-      int16_t motor_command = (int16_t)temp_result2; 
+      int16_t motor_command = (int16_t)temp_result; 
       motor_command = (motor_command > 25000) ? 25000 : motor_command; // 限制上限
       motor_command = (motor_command < -25000) ? -25000 : motor_command; // 限制下限
-      GM6020.test=motor_command;//第一个电机控制的是pitch轴喔
+			GM6020.Set_Speed=received_target_velocity_f;
+      GM6020.test=motor_command;//第一个电机控制的是yaw轴喔
 			Send_GM6020_Motor_Message(motor_command,0x00, 0x00, 0x00); 
     }
     else

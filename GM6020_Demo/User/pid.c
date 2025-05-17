@@ -78,59 +78,81 @@ float wrap_error(float target, float measured) {
     return error;
 }
 
-float position_PID(float target, float current,PID PosePID) {
-	  static uint32_t past;
-		uint32_t now = xTaskGetTickCount();
-		//dt1=(now-past)*(1.0 / configTICK_RATE_HZ);
-	  past=now;
-	  PosePID.integral = 0;//改用结构体
-    PosePID.last_error = 0;
-	  PosePID.last_target=0;//使用微分前馈
-	  feedforward=(target - PosePID.last_target);
-    // 角度解算
-    //float current_angle = current * (360.0f / ENCODER_MAX); // 转换为角度值
-    //float target_angle = target * (360.0f / ENCODER_MAX);
+float position_PID(float target, float current, PID *PosePID) {  // 使用指针传递
+    static uint32_t past;
+    uint32_t now = xTaskGetTickCount();
+    float dt = (now - past) * (1.0 / configTICK_RATE_HZ);  // 取消注释，计算时间差
+    past = now;
+    
+    // 计算前馈项
+    float feedforward = (target - PosePID->last_target) / dt;  // 除以时间得到变化率
+    PosePID->last_target = target;  // 更新目标值，但不要重置为0
+    
     // 过零处理
     float error = wrap_error(target, current);
-   // error = target - current;
-    PosePID.integral += error ;
-	//积分限幅
-	  PosePID.integral=(PosePID.integral<INTERGEL_MIN)?INTERGEL_MIN:PosePID.integral;
-	  PosePID.integral=(PosePID.integral>INTERGEL_MAX)?INTERGEL_MAX:PosePID.integral;
-    PosePID.derivative = (error - PosePID.last_error) ;
     
-    PosePID.last_error = error;
-	//死区，看情况启用if(error<=0.01){
-		//error=0;
-		//}
-	  float result = PosePID.P*error + PosePID.I*PosePID.integral + PosePID.D*PosePID.derivative;
-		
+    // 更新积分项，但不要重置为0
+    PosePID->integral += error * dt;  // 乘以时间差
+    
+    // 积分限幅
+    if(PosePID->integral < INTERGEL_MIN) PosePID->integral = INTERGEL_MIN;
+    if(PosePID->integral > INTERGEL_MAX) PosePID->integral = INTERGEL_MAX;
+    
+    // 计算微分项，不要重置last_error为0
+    PosePID->derivative = (error - PosePID->last_error) / dt;  // 除以时间差
+    PosePID->last_error = error;  // 更新上次误差
+    
+    // 死区处理
+    // if(fabs(error) <= 0.01) error = 0;
+    
+    // 计算最终输出（包含前馈项）
+    float result = PosePID->P * error + 
+                   PosePID->I * PosePID->integral + 
+                   PosePID->D * PosePID->derivative + 
+                   PosePID->F * feedforward;  // 添加前馈项
+    
     return result;
 }
 
-
-float velocity_PID(float target, float current,PID VelPID) {
-	  static uint32_t Vpast;
-	  uint32_t now = xTaskGetTickCount();
-	  dt2=(now-Vpast)*(1.0 / configTICK_RATE_HZ);//dt就默认同环的所有电机共享了，这个后面肯定要改，但是我懒
-	  Vpast=now;
-    VelPID.integral = 0;
-    VelPID.last_error = 0;
+float velocity_PID(float target, float current, PID *VelPID) {  // 使用指针传递
+    static uint32_t Vpast;
+    uint32_t now = xTaskGetTickCount();
+    float dt2 = (now - Vpast) * (1.0 / configTICK_RATE_HZ);
+    Vpast = now;
+    
+    // 不要重置积分和上次误差
+    // VelPID.integral = 0;  // 删除这行
+    // VelPID.last_error = 0;  // 删除这行
     
     float error = target - current;
-	  if(fabs(error)<=0.01){
-		  error=0;
-		}
-    VelPID.integral += error * dt2;
-		//积分限幅
-	  VelPID.integral=(VelPID.integral<INTERGEL_MIN)?INTERGEL_MIN:VelPID.integral;
-	  VelPID.integral=(VelPID.integral>INTERGEL_MAX)?INTERGEL_MAX:VelPID.integral;
-    VelPID.derivative = (error -  VelPID.last_error)/ dt2;
     
-    VelPID.last_error = error;
-    float vresult = VelPID.P*error + VelPID.I*VelPID.integral + VelPID.D*VelPID.derivative;
-		//return vresult;
-    return vresult+(feedforward*VelPID.F);
+    // 死区处理
+    if(fabs(error) <= 0.01) {
+        error = 0;
+    }
+    
+    // 积分项计算
+    VelPID->integral += error * dt2;
+    
+    // 积分限幅
+    if(VelPID->integral < INTERGEL_MIN) VelPID->integral = INTERGEL_MIN;
+    if(VelPID->integral > INTERGEL_MAX) VelPID->integral = INTERGEL_MAX;
+    
+    // 微分项计算
+    VelPID->derivative = (error - VelPID->last_error) / dt2;
+    
+    // 更新上次误差
+    VelPID->last_error = error;
+    
+    // 计算前馈项（需要在外部定义或传入feedforward）
+    float feedforward = 0; // 这里应该定义前馈项或从外部传入
+    
+    // 计算最终输出
+    float vresult = VelPID->P * error + 
+                    VelPID->I * VelPID->integral + 
+                    VelPID->D * VelPID->derivative;
+    
+    return vresult + (feedforward * VelPID->F);
 }
 
 

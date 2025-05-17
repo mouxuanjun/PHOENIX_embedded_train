@@ -57,7 +57,7 @@ extern Moto_GM6020_t GM6020;
 extern Moto_GM6020_t GM6020_pitch;
 extern PID PosePID_yaw;
 extern PID PosePID_pitch;
-
+extern uint8_t CAN_Input;
 extern PID VelPID_yaw;
 extern PID VelPID_pitch;
 
@@ -151,7 +151,7 @@ void MX_FREERTOS_Init(void) {
   GM6020_Task_innHandle = osThreadCreate(osThread(GM6020_Task_inn), NULL);
 
   /* definition and creation of CAN_input_task */
-  osThreadDef(CAN_input_task, StartTask04, osPriorityIdle, 0, 128);
+  osThreadDef(CAN_input_task, StartTask04, osPriorityBelowNormal, 0, 128);
   CAN_input_taskHandle = osThreadCreate(osThread(CAN_input_task), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -268,7 +268,7 @@ void StartTask02(void const * argument)
 	  }
 		//GM6020.Set_Angle = generate_sine_target();
 		//float temp_result1=position_PID(target_position,GM6020.rotor_angle);
-		float temp_result1=position_PID(GM6020.Set_Angle,GM6020.rotor_angle,PosePID_pitch);
+		float temp_result1=position_PID(GM6020.Set_Angle,GM6020.rotor_angle,PosePID_yaw);
 		float temp_result2=position_PID(GM6020_pitch.Set_Angle,GM6020_pitch.rotor_angle,PosePID_pitch);
 		if(emergence_stop!=1){
 			xStatus2 = osMessagePut(Usb_queneHandle, MSG_MAGIC, xTicksToWait);
@@ -324,14 +324,14 @@ void StartTask03(void const * argument)
 			received_target_velocity2=(received_target_velocity2>=340)?340:received_target_velocity2;
 			received_target_velocity2=(received_target_velocity2<=-340)?-340:received_target_velocity2;
 			float temp_result = velocity_PID(received_target_velocity, GM6020.rotor_speed,VelPID_yaw);
-      float temp_result2 = velocity_PID(received_target_velocity, GM6020.rotor_speed,VelPID_pitch);
+      float temp_result2 = velocity_PID(received_target_velocity2, GM6020_pitch.rotor_speed,VelPID_pitch);
         //float temp_result2 = velocity_PID(GM6020.Set_Speed, GM6020.rotor_speed);
       
       // temp_result2 （目标电压）需要转换类型。
       int16_t motor_command = (int16_t)temp_result2; 
       motor_command = (motor_command > 25000) ? 25000 : motor_command; // 限制上限
       motor_command = (motor_command < -25000) ? -25000 : motor_command; // 限制下限
-      GM6020.test=motor_command;
+      GM6020.test=motor_command;//第一个电机控制的是pitch轴喔
 			Send_GM6020_Motor_Message(motor_command,0x00, 0x00, 0x00); 
     }
     else
@@ -359,13 +359,12 @@ void StartTask04(void const * argument)
   /* Infinite loop */
   for(;;)
   { 
-		// 等待信号标志位 0x1
-		osEvent evt = osSignalWait(0x1, osWaitForever);  // 永久阻塞直到信号到达
+		
    
-    if (evt.status == osEventSignal) {
+    if (CAN_Input == 1) {
       /* 信号到达后的处理流程 */
       Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
-      
+      CAN_Input=0;
       /* 处理完成后自动回到循环开头，再次进入阻塞 */
     }
 		

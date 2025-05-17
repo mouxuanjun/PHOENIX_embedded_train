@@ -7,7 +7,7 @@
 
 #define Motor_1_ID 0x205
 #define Motor_2_ID 0x206
-
+uint8_t test3=0;
 /**
  * @file BSP_Can.c
  * @brief 初始化筛选器（这里掩码和显码都是0）
@@ -56,14 +56,14 @@ void CAN_Filter_Init(void)
  */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
-    
+    test3++;
     //uint8_t rx_data[8];
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
     if(hcan->Instance == CAN1){
 			if((rx_header.StdId == Motor_1_ID)||(rx_header.StdId == Motor_2_ID)){//这里改成用定义，修改太麻烦了
 				CAN_Input=1;//标志位 置1
 				// 发送通知唤醒任务（CMSIS
-				osSignalSet(CAN_input_taskHandle, 0x1); 
+				//osSignalSet(CAN_input_taskHandle, 0x1); //非中断安全API，后期还得改
 		    
 		 }
     }

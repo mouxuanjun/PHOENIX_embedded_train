@@ -19,5 +19,6 @@ extern GM6020_st rc_6020;
 
 
 void GM6020_RxData(uint32_t StdId, uint8_t rx_data[8]);
+void GM6020_task(void const * argument);
 
 #endif

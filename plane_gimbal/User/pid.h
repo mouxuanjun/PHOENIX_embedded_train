@@ -39,6 +39,6 @@ void pid_velocity_init(pid_v * pid_velocity, float Kp, float Ki, float Kd, float
 void pid_angle_init(pid_a * pid_angle, float Kp, float Ki, float Kd, float MAX, float limit_form, float init);
 float pid_velocity_control(pid_v * pid_velocity, float current_speed_form, float target_speed_form);
 float pid_angle_control(pid_a * pid_angle, float current_angle_form, float target_angle_form);
-void Limit(pid_a * pid_angle, int16_t H, int16_t L);
+void Limit(pid_a * pid_angle, float H, float L);
 
 #endif

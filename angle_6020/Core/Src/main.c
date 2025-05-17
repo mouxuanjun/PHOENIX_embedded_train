@@ -103,8 +103,8 @@ int main(void)
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   Filter_Init();
-  pid_velocity_init(&pid_velocity, 35, 16.5, 9, 20000);
-  pid_angle_init(&pid_angle, 1.85, 0, 0, 20000);
+  pid_velocity_init(&pid_velocity, 35, 17.5, 9, 20000);
+  pid_angle_init(&pid_angle, 1.1, 0, 0, 20000);
   HAL_UART_Receive_DMA(&huart3, rx_data, 18);
   /* USER CODE END 2 */
 

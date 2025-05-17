@@ -103,7 +103,7 @@ float pid_angle_control(pid_a * pid_angle, float current_angle_form, float targe
     return pid_angle -> PID_angle_out;
 }
 
-void Limit(pid_a * pid_angle, int16_t H, int16_t L){
+void Limit(pid_a * pid_angle, float H, float L){
 	if (pid_angle -> target_angle > H){
 		pid_angle -> target_angle = H;
 	}

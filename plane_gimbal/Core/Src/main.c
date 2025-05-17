@@ -113,10 +113,10 @@ int main(void)
   pid_velocity_init(&rc_6020.GM6020_velocity, 0, 0, 0, 20000);                                   //GM6020速度环初始化
   pid_angle_init(&rc_4310.DM4310_angle, 0, 0, 0, 20000, 120, 0);                                 //DM4310角度环初始化
   pid_velocity_init(&rc_4310.DM4310_velocity, 0, 0, 0, 20000);                                   //DM4310速度环初始化
-  pid_angle_init(&rc_3508[0].GM3508_angle, 0, 0, 0, 20000, 469, 0);                              //GM3508角度环初始化
-  pid_velocity_init(&rc_3508[0].GM3508_velocity, 0, 0, 0, 20000);                                //GM3508速度环初始化
-  pid_angle_init(&rc_3508[1].GM3508_angle, 0, 0, 0, 20000, 469, 0);                              //GM3508角度环初始化
-  pid_velocity_init(&rc_3508[1].GM3508_velocity, 0, 0, 0, 20000);                                //GM3508速度环初始化
+//  pid_angle_init(&rc_3508[0].GM3508_angle, 0, 0, 0, 20000, 469, 0);                              //GM3508角度环初始化
+//  pid_velocity_init(&rc_3508[0].GM3508_velocity, 0, 0, 0, 20000);                                //GM3508速度环初始化
+//  pid_angle_init(&rc_3508[1].GM3508_angle, 0, 0, 0, 20000, 469, 0);                              //GM3508角度环初始化
+//  pid_velocity_init(&rc_3508[1].GM3508_velocity, 0, 0, 0, 20000);                                //GM3508速度环初始化
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

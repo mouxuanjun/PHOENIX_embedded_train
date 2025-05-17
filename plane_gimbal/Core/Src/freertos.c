@@ -110,11 +110,11 @@ void MX_FREERTOS_Init(void) {
   GM6020Handle = osThreadCreate(osThread(GM6020), NULL);
 
   /* definition and creation of DM4310 */
-  osThreadDef(DM4310, DM4310_task, osPriorityIdle, 0, 128);
+  osThreadDef(DM4310, DM4310_task, osPriorityNormal, 0, 128);
   DM4310Handle = osThreadCreate(osThread(DM4310), NULL);
 
   /* definition and creation of GM3508 */
-  osThreadDef(GM3508, GM3508_task, osPriorityIdle, 0, 128);
+  osThreadDef(GM3508, GM3508_task, osPriorityNormal, 0, 128);
   GM3508Handle = osThreadCreate(osThread(GM3508), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */

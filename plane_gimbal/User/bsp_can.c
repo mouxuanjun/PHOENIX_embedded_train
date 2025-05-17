@@ -52,15 +52,13 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan){
     case 0x11:
         DM4310_RxData(rx_header.StdId, rx_data);
         break;
-	case 0x201:
-		GM3508_RxData(rx_header.StdId, rx_data);
-		break;
-	case 0x202:
-		GM3508_RxData(rx_header.StdId, rx_data);
-		break;
+//	case 0x201:
+//		GM3508_RxData(rx_header.StdId, rx_data);
+//		break;
+//	case 0x202:
+//		GM3508_RxData(rx_header.StdId, rx_data);
+//		break;
 	}
-    __HAL_CAN_ENABLE_IT(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
-    __HAL_CAN_ENABLE_IT(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING); 
 }
 
 /**
@@ -70,17 +68,17 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan){
  */
 void GM6020_Control(int16_t motor){
 	uint8_t target_Torque[8];
-	CAN_TxHeaderTypeDef tx_header1;
+	CAN_TxHeaderTypeDef tx_header;
 
-	tx_header1.StdId = 0X1FF;
-	tx_header1.IDE = CAN_ID_STD;
-	tx_header1.RTR = CAN_RTR_DATA;
-	tx_header1.DLC = 8;
+	tx_header.StdId = 0X1FF;
+	tx_header.IDE = CAN_ID_STD;
+	tx_header.RTR = CAN_RTR_DATA;
+	tx_header.DLC = 8;
 
 	target_Torque[6] = (motor >> 8) & 0xFF;
 	target_Torque[7] = motor & 0xFF;
 
-	HAL_CAN_AddTxMessage(&hcan2, &tx_header1, target_Torque, (uint32_t *)CAN_TX_MAILBOX0);  
+	HAL_CAN_AddTxMessage(&hcan2, &tx_header, target_Torque, (uint32_t *)CAN_TX_MAILBOX0);  
 }
 
 /**

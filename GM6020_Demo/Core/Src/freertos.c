@@ -63,7 +63,7 @@ extern PID VelPID_pitch;
 
 extern CAN_RxHeaderTypeDef rx_header;//can总线接受的接收区头
 extern uint8_t rx_data[8];
-
+BaseType_t xStatus2;
 //uint16_t target=100;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
@@ -126,7 +126,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* definition and creation of Usb_quene */
-  osMessageQDef(Usb_quene, 16, uint32_t);
+  osMessageQDef(Usb_quene, 32, uint32_t);
   Usb_queneHandle = osMessageCreate(osMessageQ(Usb_quene), NULL);
 
   /* definition and creation of RCqueue */
@@ -269,18 +269,21 @@ void StartTask02(void const * argument)
 		//GM6020.Set_Angle = generate_sine_target();
 		//float temp_result1=position_PID(target_position,GM6020.rotor_angle);
 		float temp_result1=position_PID(GM6020.Set_Angle,GM6020.rotor_angle,&PosePID_yaw);
+		GM6020.test=temp_result1;
 		float temp_result2=position_PID(GM6020_pitch.Set_Angle,GM6020_pitch.rotor_angle,&PosePID_pitch);
 		if(emergence_stop!=1){
-			xStatus2 = osMessagePut(Usb_queneHandle, MSG_MAGIC, xTicksToWait);
-    xStatus2 = xQueueSend(Usb_queneHandle, &temp_result1, xTicksToWait);
-			xStatus2 = osMessagePut(Usb_queneHandle, MSG_MAGIC2, xTicksToWait);
-			xStatus2 = xQueueSend(Usb_queneHandle, &temp_result2, xTicksToWait);
+			// xStatus2 = osMessagePut(Usb_queneHandle, MSG_MAGIC, xTicksToWait);
+       //if (xStatus2 == pdPASS) 
+			   uint32_t raw_data = *(uint32_t*)&temp_result1; // 将 float 转为二进制 uint32_t
+
+				 xStatus2 =  xQueueSend(Usb_queneHandle,  &raw_data, xTicksToWait);
+			 //if (xStatus2 == pdPASS) xStatus2 =  osMessagePut(Usb_queneHandle, MSG_MAGIC2, xTicksToWait);
+			 //if (xStatus2 == pdPASS) xStatus2 =  xQueueSend(Usb_queneHandle, &temp_result2, xTicksToWait);
 		}
-    if (xStatus2 != pdPASS)
-    {
-        // 队列已满或发送失败
-        printf("Warning: Failed to send to Usb_queue\r\n");
-    }
+		if(xStatus2!=pdPASS){
+     UBaseType_t messages_waiting = uxQueueMessagesWaiting(Usb_queneHandle);
+    printf("队列已满！当前消息数：%lu，%d）\r\n", messages_waiting, 16); // 16 是你的队列容量
+		}
     vTaskDelay(pdMS_TO_TICKS(1)); 
 		
   }
@@ -307,21 +310,23 @@ void StartTask03(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-		xStatus = xQueueReceive(Usb_queneHandle, &temp_message, xTicksToWait);
-		if(temp_message==MSG_MAGIC){
-			xQueueReceive(Usb_queneHandle, &received_target_velocity, xTicksToWait);
-			received_target_velocity_f=(float)received_target_velocity;
-			xQueueReceive(Usb_queneHandle, &temp_message, xTicksToWait);
-			if(temp_message==MSG_MAGIC2){
+		//xStatus = xQueueReceive(Usb_queneHandle, &temp_message, xTicksToWait);
+		//if(temp_message==MSG_MAGIC){
+				xStatus =xQueueReceive(Usb_queneHandle, &received_target_velocity, xTicksToWait);
+				received_target_velocity_f=*(float*)&received_target_velocity;
+			//	xStatus =xQueueReceive(Usb_queneHandle, &temp_message, xTicksToWait);
+			//if(temp_message==MSG_MAGIC2){
 				xQueueReceive(Usb_queneHandle, &received_target_velocity2, xTicksToWait);
-				received_target_velocity2_f=(float)received_target_velocity2;
-			}
-		}
+		    received_target_velocity2_f=*(float*)&received_target_velocity2;
+				//received_target_velocity2_f=(float)received_target_velocity2;
+			//}
+		//}
 		  // 检查是否成功接收到数据
     if (xStatus == pdPASS)
     {
       // 成功接收到数据，现在 received_target_velocity 包含了 Task02 发送的值
       // 使用接收到的值作为速度PID的目标值
+			GM6020.Set_Speed=received_target_velocity_f;
 			received_target_velocity_f=(received_target_velocity_f>=340)?340:received_target_velocity_f;
 			received_target_velocity_f=(received_target_velocity_f<=-340)?-340:received_target_velocity_f;
 			
@@ -330,13 +335,14 @@ void StartTask03(void const * argument)
 			float temp_result = velocity_PID(received_target_velocity_f, GM6020.rotor_speed,&VelPID_yaw);
       float temp_result2 = velocity_PID(received_target_velocity2_f, GM6020_pitch.rotor_speed,&VelPID_pitch);
         //float temp_result2 = velocity_PID(GM6020.Set_Speed, GM6020.rotor_speed);
+			
       
       // temp_result2 （目标电压）需要转换类型。
       int16_t motor_command = (int16_t)temp_result; 
       motor_command = (motor_command > 25000) ? 25000 : motor_command; // 限制上限
       motor_command = (motor_command < -25000) ? -25000 : motor_command; // 限制下限
-			GM6020.Set_Speed=received_target_velocity_f;
-      GM6020.test=motor_command;//第一个电机控制的是yaw轴喔
+			
+      //GM6020.test=motor_command;//第一个电机控制的是yaw轴喔
 			Send_GM6020_Motor_Message(motor_command,0x00, 0x00, 0x00); 
     }
     else

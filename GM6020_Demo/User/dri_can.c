@@ -7,7 +7,7 @@
 
 #define Motor_1_ID 0x205
 #define Motor_2_ID 0x206
-uint8_t test3=0;
+//uint8_t test3=0;
 /**
  * @file BSP_Can.c
  * @brief 初始化筛选器（这里掩码和显码都是0）
@@ -56,7 +56,7 @@ void CAN_Filter_Init(void)
  */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
-    test3++;
+    //test3++;
     //uint8_t rx_data[8];
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
     if(hcan->Instance == CAN1){

@@ -32,11 +32,12 @@
 
 //P,I,D,F
 //PID PosePID={0.054,0,0.0428,0};
-PID PosePID_yaw={0.0758,0,0.079,0};
-PID PosePID_pitch={0.0758,0,0.079,0};
+PID PosePID_yaw={.P=0.0758,.I=0,.D=0.079,.F=0,.integral=0,.last_error=0,.derivative=0};
+
+PID PosePID_pitch={.P=0.0758,.I=0,.D=0.079,.F=0,.integral=0,.last_error=0,.derivative=0};
 //PID VelPID={74,565,0};
-PID VelPID_yaw={63,521,0,0};
-PID VelPID_pitch={63,521,0,0};
+PID VelPID_yaw={.P=63,.I=521,.D=0,.F=0,.integral=0,.last_error=0,.derivative=0};
+PID VelPID_pitch={.P=63,.I=521,.D=0,.F=0,.integral=0,.last_error=0,.derivative=0};
 
 
 
@@ -47,7 +48,7 @@ static uint32_t sine_gen_last_tick = 0; // 上次调用发生器时的 Tick Coun
 // 预计算常量
 static float sine_gen_omega = 0.0f;
 static float sine_gen_omega_squared = 0.0f;
-
+uint8_t begin=1;
 
 //前馈
 float feedforward=0;
@@ -85,21 +86,24 @@ float position_PID(float target, float current, PID *PosePID) {  // 使用指针
     past = now;
     
     // 计算前馈项
-    float feedforward = (target - PosePID->last_target) / dt;  // 除以时间得到变化率
+    float feedforward = (target - PosePID->last_target);  // 除以时间得到变化率
     PosePID->last_target = target;  // 更新目标值，但不要重置为0
     
     // 过零处理
     float error = wrap_error(target, current);
-    
+    if(begin==1){
+			PosePID->last_error=error;
+			begin=0;
+		}
     // 更新积分项，但不要重置为0
-    PosePID->integral += error * dt;  // 乘以时间差
+    PosePID->integral += error ;  // 乘以时间差
     
     // 积分限幅
     if(PosePID->integral < INTERGEL_MIN) PosePID->integral = INTERGEL_MIN;
     if(PosePID->integral > INTERGEL_MAX) PosePID->integral = INTERGEL_MAX;
     
     // 计算微分项，不要重置last_error为0
-    PosePID->derivative = (error - PosePID->last_error) / dt;  // 除以时间差
+    PosePID->derivative = (error - PosePID->last_error) ;  // 除以时间差
     PosePID->last_error = error;  // 更新上次误差
     
     // 死区处理
@@ -125,7 +129,10 @@ float velocity_PID(float target, float current, PID *VelPID) {  // 使用指针�
     // VelPID.last_error = 0;  // 删除这行
     
     float error = target - current;
-    
+    if(begin==1){
+			VelPID->last_error=error;
+			begin=0;
+		}
     // 死区处理
     if(fabs(error) <= 0.01) {
         error = 0;
@@ -145,7 +152,7 @@ float velocity_PID(float target, float current, PID *VelPID) {  // 使用指针�
     VelPID->last_error = error;
     
     // 计算前馈项（需要在外部定义或传入feedforward）
-    float feedforward = 0; // 这里应该定义前馈项或从外部传入
+    float feedforward = 0.1*(error-VelPID->last_error); // 这里应该定义前馈项或从外部传入
     
     // 计算最终输出
     float vresult = VelPID->P * error + 

@@ -35,8 +35,7 @@
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN INCLUDE */
-extern uint8_t myUSBRxData[64]; //接收数据缓存
-extern uint16_t myUSBRxNum; //接收到的字节�?
+
 /* USER CODE END INCLUDE */
 
 /** @addtogroup USBD_OTG_DRIVER

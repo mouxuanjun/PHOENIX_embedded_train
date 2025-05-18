@@ -13,6 +13,7 @@ extern DM4310 DM4310_1;
 extern DM4310 DM4310_2;
 extern DM4310 DM4310_3;
 extern DM4310 DM4310_4;
+extern DM4310 DM4340_2;
 extern GM6020_All GM6020_All1;
 
 void Class_CAN::CPP_CAN_Filter_Init() {
@@ -168,6 +169,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
         }
         case 0x012:case 0x112:case 0x212:{
             DM4310_2.Update();
+            DM4340_2.Update();
             break;
         }
         case 0x013:case 0x113:case 0x213:{

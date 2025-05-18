@@ -39,7 +39,8 @@ static int float_to_uint(float x, float x_min, float x_max, int bits) {
     return (int)((x - offset) * ((float)((1 << bits) - 1)) / span);
 }
 
-void DM4310::Init(uint8_t _id, CAN_HandleTypeDef* _hcan, DM_CtrlMode _ctrl_mode) {
+void DM4310::Init(DM_Type _motor_type,uint8_t _id, CAN_HandleTypeDef* _hcan, DM_CtrlMode _ctrl_mode) {
+    motor_type = _motor_type;
     ctrl_mode = _ctrl_mode;
     motor_id = _id;
     CAN_Handle = _hcan;
@@ -77,6 +78,7 @@ void DM4310::Enable() {
     else if (ctrl_mode == DM_CtrlMode_MIT) {
         CAN_id = 0x000 + motor_id;
     }
+
     TxBuffer[0] = 0xFF;
     TxBuffer[1] = 0xFF;
     TxBuffer[2] = 0xFF;
@@ -135,14 +137,23 @@ void DM4310::Update() {
         const int t_int = ((CPP_CAN1.CPP_CAN_RxBuffer[4] & 0xF) << 8) | CPP_CAN1.CPP_CAN_RxBuffer[5];
         motor_info.position_raw = uint_to_float(p_int, -12.5f, 12.5f, 16); // (-12.5,12.5)
 
+        switch (motor_type) {
+        case DM_4310: {
+            motor_info.velocity = uint_to_float(v_int, -45, 45, 12); // (-45.0,45.0)
+            motor_info.torque = uint_to_float(t_int, -18, 18, 12); // (-18.0,18.0)
+        }
+        case DM_4340: {
+            motor_info.velocity = uint_to_float(v_int, -10, 10, 12); // (-10.0,10.0)
+            motor_info.torque = uint_to_float(t_int, -28, 28, 12); // (-28.0,28.0)
+        }
+        }
+
         if(motor_info.position_raw > 6.25f) motor_info.position = motor_info.position_raw-6.25f;
         else if (motor_info.position_raw < 0.0f) motor_info.position = motor_info.position_raw+6.25f;
         else motor_info.position = motor_info.position_raw;
         if(motor_info.position> 6.25f) motor_info.position = motor_info.position-6.25f;
         else if (motor_info.position < 0.0f) motor_info.position = motor_info.position+6.25f;
 
-        motor_info.velocity = uint_to_float(v_int, -45, 45, 12); // (-45.0,45.0)
-        motor_info.torque = uint_to_float(t_int, -18, 18, 12); // (-18.0,18.0)
         motor_info.Err = (CPP_CAN1.CPP_CAN_RxBuffer[0] & 0xF0) >> 4;
         if (motor_info.Err == 1) enabled = true;
         else if (motor_info.Err == 0) enabled = false;
@@ -199,6 +210,27 @@ void DM4310::Ctrl_MIT_Mode(float Kp, float Kd, float pos, float vel, float tor) 
     }
 }
 
+void DM4310::Ctrl_SpeedPosition_Mode(float pos, float vel) {
+    ctrl_target.position = pos;
+    ctrl_target.velocity = vel;
+
+    uint8_t TxBuffer[8];
+    uint32_t CAN_id;
+    if (ctrl_mode == DM_CtrlMode_SpeedPosition) {
+        CAN_id = 0x100 + motor_id;
+    }
+    else return;
+
+    *(float*)TxBuffer = ctrl_target.position;
+    *(float*)(TxBuffer + 4) = ctrl_target.velocity;
+
+    if (CAN_Handle->Instance == CAN1) {
+        CPP_CAN1.CPP_CAN_Tx_Data(TxBuffer, CAN_id);
+    }
+    else if (CAN_Handle->Instance == CAN2) {
+        CPP_CAN2.CPP_CAN_Tx_Data(TxBuffer, CAN_id);
+    }
+}
 
 void DM4310::Ctrl_Speed(float Speed) {
     float Max = 60;
@@ -228,3 +260,4 @@ DM4310 DM4310_1;
 DM4310 DM4310_2;
 DM4310 DM4310_3;
 DM4310 DM4310_4;
+DM4310 DM4340_2;

@@ -3,7 +3,11 @@
 //
 
 #include "USB_task.h"
+
+#include <cmath>
+
 #include "freertos.h"
+#include "main.h"
 #include "cmsis_os.h"
 #include "usbd_cdc_if.h"
 
@@ -121,13 +125,15 @@ USB_Data USB_Data1;
 void CPP_USB_Task() {
     uint32_t TxLen = 10;
     USB_Data1.CPP_USBData_Init();
+    uint16_t c = 0;
 
     while (1) {
-        osDelay(2);
+        osDelay(2000);
+        c = (c>1000)?0:c+1;
         USB_Data1.CPP_USBData_Process();
         USB_Data1.CPP_USBData_SendMsg(0,
-                                      3.145f,
-                                      5.314f);
+                                      3.145f/2.0f * sin(c * 0.01f),
+                                      5.314f/2.0f * sin(c * 0.01f));
     }
 }
 

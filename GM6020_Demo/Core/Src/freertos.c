@@ -271,18 +271,24 @@ void StartTask02(void const * argument)
 		float temp_result1=position_PID(GM6020.Set_Angle,GM6020.rotor_angle,&PosePID_yaw);
 		GM6020.test=temp_result1;
 		float temp_result2=position_PID(GM6020_pitch.Set_Angle,GM6020_pitch.rotor_angle,&PosePID_pitch);
-		if(emergence_stop!=1){
-			// xStatus2 = osMessagePut(Usb_queneHandle, MSG_MAGIC, xTicksToWait);
-       //if (xStatus2 == pdPASS) 
-			   uint32_t raw_data = *(uint32_t*)&temp_result1; // 将 float 转为二进制 uint32_t
-
-				 xStatus2 =  xQueueSend(Usb_queneHandle,  &raw_data, xTicksToWait);
-			 //if (xStatus2 == pdPASS) xStatus2 =  osMessagePut(Usb_queneHandle, MSG_MAGIC2, xTicksToWait);
-			 //if (xStatus2 == pdPASS) xStatus2 =  xQueueSend(Usb_queneHandle, &temp_result2, xTicksToWait);
-		}
+		if (emergence_stop != 1) {
+    // 发送消息类型标识符
+    uint32_t msg_type = MSG_MAGIC2;
+    xStatus2=xQueueSend(Usb_queneHandle, &msg_type, xTicksToWait);
+    
+    // 发送yaw轴数据
+    uint32_t raw_data = *(uint32_t*)&temp_result1;
+    xQueueSend(Usb_queneHandle, &raw_data, xTicksToWait);
+    
+    // 发送另一轴数据
+    msg_type = MSG_MAGIC3;
+    xQueueSend(Usb_queneHandle, &msg_type, xTicksToWait);
+    raw_data = *(uint32_t*)&temp_result2;
+    xQueueSend(Usb_queneHandle, &raw_data, xTicksToWait);
+    }
 		if(xStatus2!=pdPASS){
      UBaseType_t messages_waiting = uxQueueMessagesWaiting(Usb_queneHandle);
-    printf("队列已满！当前消息数：%lu，%d）\r\n", messages_waiting, 16); // 16 是你的队列容量
+			printf("队列已满！当前消息数：%lu，%d）\r\n", messages_waiting, 32); // 32 是你的队列容量(并不是32强鸽鸽）
 		}
     vTaskDelay(pdMS_TO_TICKS(1)); 
 		
@@ -306,21 +312,21 @@ void StartTask03(void const * argument)
   float received_target_velocity2_f;	// 用于存储从队列接收到的目标速度2
   BaseType_t xStatus;             // 用于检查 xQueueReceive 的返回值
 	uint32_t temp_message;
-  const TickType_t xTicksToWait = portMAX_DELAY; // 设置等待时间
+  const TickType_t xTicksToWait = 0; // 设置等待时间
   /* Infinite loop */
   for(;;)
   {
-		//xStatus = xQueueReceive(Usb_queneHandle, &temp_message, xTicksToWait);
-		//if(temp_message==MSG_MAGIC){
+		xStatus = xQueueReceive(Usb_queneHandle, &temp_message, xTicksToWait);
+		if(temp_message==MSG_MAGIC2){
 				xStatus =xQueueReceive(Usb_queneHandle, &received_target_velocity, xTicksToWait);
 				received_target_velocity_f=*(float*)&received_target_velocity;
-			//	xStatus =xQueueReceive(Usb_queneHandle, &temp_message, xTicksToWait);
-			//if(temp_message==MSG_MAGIC2){
+				xStatus =xQueueReceive(Usb_queneHandle, &temp_message, xTicksToWait);
+			if(temp_message==MSG_MAGIC3){
 				xQueueReceive(Usb_queneHandle, &received_target_velocity2, xTicksToWait);
 		    received_target_velocity2_f=*(float*)&received_target_velocity2;
-				//received_target_velocity2_f=(float)received_target_velocity2;
-			//}
-		//}
+				
+			}
+		}
 		  // 检查是否成功接收到数据
     if (xStatus == pdPASS)
     {
@@ -352,7 +358,7 @@ void StartTask03(void const * argument)
       Send_GM6020_Motor_Message(0x00, 0x00, 0x00, 0x00);
       // printf("Failed to receive from queue\n"); // 调试信息
     }
-		osDelay(1);
+		osDelay(0);
   }
   /* USER CODE END StartTask03 */
 }

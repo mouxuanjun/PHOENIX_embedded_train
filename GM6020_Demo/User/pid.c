@@ -96,14 +96,14 @@ float position_PID(float target, float current, PID *PosePID) {  // 使用指针
 			begin=0;
 		}
     // 更新积分项，但不要重置为0
-    PosePID->integral += error ;  // 乘以时间差
+    PosePID->integral += error* dt ;  // 乘以时间差
     
     // 积分限幅
     if(PosePID->integral < INTERGEL_MIN) PosePID->integral = INTERGEL_MIN;
     if(PosePID->integral > INTERGEL_MAX) PosePID->integral = INTERGEL_MAX;
     
     // 计算微分项，不要重置last_error为0
-    PosePID->derivative = (error - PosePID->last_error) ;  // 除以时间差
+    PosePID->derivative = (error - PosePID->last_error)/ dt ;  // 除以时间差
     PosePID->last_error = error;  // 更新上次误差
     
     // 死区处理

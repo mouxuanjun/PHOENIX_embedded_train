@@ -119,6 +119,10 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>DLGUARM</Key>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>ARMRTXEVENTFLAGS</Key>
           <Name>-L70 -Z18 -C0 -M0 -T1</Name>
         </SetRegEntry>
@@ -159,11 +163,6 @@
           <count>1</count>
           <WinNumber>1</WinNumber>
           <ItemText>rc_6020,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>2</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>\\plane_gimbal\../Core/Src/main.c\rc_6020.GM6020_velocity.Ki_v</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

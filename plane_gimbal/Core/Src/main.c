@@ -109,8 +109,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   Filter_Init();
   HAL_UART_Receive_DMA(&huart3, rx_data, sizeof(rx_data));
-  pid_angle_init(&rc_6020.GM6020_angle, 0, 0, 0, 20000, 320, 5500);                              //GM6020角度环初始化
-  pid_velocity_init(&rc_6020.GM6020_velocity, 0, 0, 0, 20000);                                   //GM6020速度环初始化
+  pid_angle_init(&rc_6020.GM6020_angle, 0.235, 0, 0, 20000, 320, 5500);                              //GM6020角度环初始化
+  pid_velocity_init(&rc_6020.GM6020_velocity, 100, 1, 0.1, 20000);                                   //GM6020速度环初始化
   pid_angle_init(&rc_4310.DM4310_angle, 0, 0, 0, 20000, 120, 0);                                 //DM4310角度环初始化
   pid_velocity_init(&rc_4310.DM4310_velocity, 0, 0, 0, 20000);                                   //DM4310速度环初始化
 //  pid_angle_init(&rc_3508[0].GM3508_angle, 0, 0, 0, 20000, 469, 0);                              //GM3508角度环初始化

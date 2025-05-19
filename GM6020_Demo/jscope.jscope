@@ -10,9 +10,6 @@
             <Scope>
                 <Options TimeResolutionUs="1000000" />
             </Scope>
-            <Trigger>
-                <Options Level="0" Symbol="Set_Speed" On="0" Auto="0" Rise="0" Fall="0" />
-            </Trigger>
         </Configuration>
         <Windows>
             <Graph Show="1" />
@@ -20,28 +17,28 @@
         </Windows>
         <SelectedSymbols>
             <Symbol>
-                <Options Name="Set_Speed" Address="0x20000274" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="-2147483648" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020.Set_Speed" />
+                <Options Name="Set_Speed" Address="0x200001F4" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="-2147483648" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020.Set_Speed" />
             </Symbol>
             <Symbol>
-                <Options Name="Set_Angle" Address="0x20000278" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="-2147483648" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020.Set_Angle" />
+                <Options Name="Set_Angle" Address="0x200001F8" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="-2147483648" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020.Set_Angle" />
             </Symbol>
             <Symbol>
-                <Options Name="rotor_angle" Address="0x2000027C" Type="unsigned short" TypeID="7" Size="2" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="65535" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020.rotor_angle" />
+                <Options Name="rotor_angle" Address="0x200001FC" Type="unsigned short" TypeID="7" Size="2" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="65535" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020.rotor_angle" />
             </Symbol>
             <Symbol>
-                <Options Name="rotor_speed" Address="0x2000027E" Type="short" TypeID="11" Size="2" GraphColorRed="255" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="32767" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020.rotor_speed" />
+                <Options Name="rotor_speed" Address="0x200001FE" Type="short" TypeID="11" Size="2" GraphColorRed="255" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="32767" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020.rotor_speed" />
             </Symbol>
             <Symbol>
-                <Options Name="rotor_angle" Address="0x20000294" Type="unsigned short" TypeID="7" Size="2" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="255" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="65535" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.rotor_angle" />
+                <Options Name="Set_Speed" Address="0x2000020C" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="-2147483648" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.Set_Speed" />
             </Symbol>
             <Symbol>
-                <Options Name="rotor_speed" Address="0x20000296" Type="short" TypeID="11" Size="2" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="32767" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.rotor_speed" />
+                <Options Name="Set_Angle" Address="0x20000210" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="-2147483648" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.Set_Angle" />
             </Symbol>
             <Symbol>
-                <Options Name="Set_Angle" Address="0x20000290" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="-2147483648" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.Set_Angle" />
+                <Options Name="rotor_angle" Address="0x20000214" Type="unsigned short" TypeID="7" Size="2" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="255" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="65535" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.rotor_angle" />
             </Symbol>
             <Symbol>
-                <Options Name="Set_Speed" Address="0x2000028C" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="-2147483648" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.Set_Speed" />
+                <Options Name="rotor_speed" Address="0x20000216" Type="short" TypeID="11" Size="2" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="1.79769e+308" YMaxSampled="-1.79769e+308" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="32767" File="D:\CODES\Robomaster\PHOENIX_embedded_train\GM6020_Demo\MDK-ARM/../User/dvc_dji_gm6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.rotor_speed" />
             </Symbol>
         </SelectedSymbols>
     </Project>

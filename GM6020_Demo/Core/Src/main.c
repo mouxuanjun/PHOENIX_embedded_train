@@ -102,7 +102,7 @@ int main(void)
   MX_CAN2_Init();
   /* USER CODE BEGIN 2 */
   CAN_Filter_Init();
-  MX_USB_DEVICE_Init();
+//  MX_USB_DEVICE_Init();
 	RC_init();
   /* USER CODE END 2 */
 

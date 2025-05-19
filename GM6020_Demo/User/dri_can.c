@@ -56,7 +56,7 @@ void CAN_Filter_Init(void)
     can2_filter_st.FilterIdLow = 0x0000;
     can2_filter_st.FilterMaskIdHigh = 0x0000;
     can2_filter_st.FilterMaskIdLow = 0x0000;
-    can2_filter_st.FilterFIFOAssignment = CAN_RX_FIFO1;
+    can2_filter_st.FilterFIFOAssignment = CAN_RX_FIFO0;
     can2_filter_st.FilterActivation = ENABLE;
     can2_filter_st.FilterMode = CAN_FILTERMODE_IDMASK;
     can2_filter_st.FilterScale = CAN_FILTERSCALE_32BIT;
@@ -72,7 +72,7 @@ void CAN_Filter_Init(void)
     {
         Error_Handler();
     }
-    if (HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO1_MSG_PENDING) != HAL_OK)// 使能 CAN2 接受 FIFO0 中断
+    if (HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)// 使能 CAN2 接受 FIFO0 中断
     {
         Error_Handler();
     }

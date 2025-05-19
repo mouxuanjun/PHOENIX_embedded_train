@@ -349,7 +349,7 @@ void StartTask03(void const * argument)
       motor_command = (motor_command < -25000) ? -25000 : motor_command; // 限制下限
 			
       //GM6020.test=motor_command;//第一个电机控制的是yaw轴喔
-			Send_GM6020_Motor_Message(motor_command,0x00, 0x00, 0x00); 
+			Send_GM6020_Motor_Message(0x00, 0x00,motor_command, 0x00); 
     }
     else
     {

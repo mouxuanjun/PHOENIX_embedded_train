@@ -1,8 +1,8 @@
 #ifndef __BSP_CAN_H_
 #define __BSP_CAN_H_
 
-#define Motor_1_ID 0x205
-#define Motor_2_ID 0x206
+#define Motor_1_ID 0x207
+#define Motor_2_ID 0x205
 
 
 #include "main.h"

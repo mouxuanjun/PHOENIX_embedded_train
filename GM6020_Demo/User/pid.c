@@ -32,12 +32,13 @@
 
 //P,I,D,F
 //PID PosePID={0.054,0,0.0428,0};
-PID PosePID_yaw={.P=0.0758,.I=0,.D=0.079,.F=0,.integral=0,.last_error=0,.derivative=0};
-
-PID PosePID_pitch={.P=0.0758,.I=0,.D=0.079,.F=0,.integral=0,.last_error=0,.derivative=0};
+//PID PosePID_yaw={.P=0.0758,.I=0,.D=0.079,.F=0,.integral=0,.last_error=0,.derivative=0};
+PID PosePID_yaw={.P=0,.I=0,.D=0,.F=0,.integral=0,.last_error=0,.derivative=0};
+PID PosePID_pitch={.P=0,.I=0,.D=0,.F=0,.integral=0,.last_error=0,.derivative=0};
 //PID VelPID={74,565,0};
-PID VelPID_yaw={.P=63,.I=521,.D=0,.F=0,.integral=0,.last_error=0,.derivative=0};
-PID VelPID_pitch={.P=63,.I=521,.D=0,.F=0,.integral=0,.last_error=0,.derivative=0};
+//PID VelPID_yaw={.P=63,.I=521,.D=0,.F=0,.integral=0,.last_error=0,.derivative=0};
+PID VelPID_yaw={.P=0,.I=0,.D=0,.F=0,.integral=0,.last_error=0,.derivative=0};
+PID VelPID_pitch={.P=0,.I=0,.D=0,.F=0,.integral=0,.last_error=0,.derivative=0};
 
 
 

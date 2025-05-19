@@ -62,7 +62,7 @@ extern PID VelPID_yaw;
 extern PID VelPID_pitch;
 
 extern CAN_RxHeaderTypeDef rx_header;//can总线接受的接收区头
-extern uint8_t rx_data[8];
+//extern uint8_t rx_data[8];
 BaseType_t xStatus2;
 //uint16_t target=100;
 /* USER CODE END Variables */
@@ -378,12 +378,12 @@ void StartTask04(void const * argument)
   { 
 		
    
-    if (CAN_Input == 1) {
-      /* 信号到达后的处理流程 */
-      Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
-      CAN_Input=0;
-      /* 处理完成后自动回到循环开头，再次进入阻塞 */
-    }
+//    if (CAN_Input == 1) {
+//      /* 信号到达后的处理流程 */
+//      Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
+//      CAN_Input=0;
+//      /* 处理完成后自动回到循环开头，再次进入阻塞 */
+//    }
 		
 	
 		

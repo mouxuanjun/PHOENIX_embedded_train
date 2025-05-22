@@ -29,6 +29,8 @@
 /* USER CODE BEGIN Includes */
 #include "BSP_CAN.h"
 #include "GM6020.h"
+#include "BMI088.h"
+#include "IMU_BMI088.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,6 +101,8 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   CAN_Filter_Init();
+	BMI088_FLOAT_ACC_GYRO_Init();
+
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

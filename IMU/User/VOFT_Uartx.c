@@ -1,6 +1,8 @@
 #include "VOFT_Uartx.h"
-
+#include "IMU_BMI088.h"
+#include "BMI088.h"
 extern uint8_t VOFT_Data[20];
+extern mpu BMI088;
 extern float Set_Yaw,Set_Pitch;
 extern float IMU_angle[3];
 extern Moto_GM6020_t GM6020;
@@ -25,7 +27,11 @@ int fputc(int ch, FILE *f)
 
 
 void VOFA_Tx(void) {
-    printf("%d,%.3f\r\n",
-        GM6020.rotor_angle,
-        (double)GM6020.Set_Angle);
+//    printf("%d,%.3f\r\n",
+//        GM6020.rotor_angle,
+//        (double)GM6020.Set_Angle);
+	   printf("%f,%f,%f\r\n",
+        BMI088.pitch,BMI088.roll,BMI088.yaw
+        );
+	
 }

@@ -21,6 +21,7 @@
 #include "cmsis_os.h"
 #include "can.h"
 #include "dma.h"
+#include "spi.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -28,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include "BSP_CAN.h"
 #include "GM6020.h"
+#include "BMI088driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,8 +97,10 @@ int main(void)
   MX_DMA_Init();
   MX_CAN1_Init();
   MX_USART1_UART_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   CAN_Filter_Init();
+	BMI088_init(&hspi1, 0);//放弃校准，因为没开时钟外设，也搞不准
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

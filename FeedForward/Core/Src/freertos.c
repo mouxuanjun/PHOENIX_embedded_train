@@ -22,6 +22,8 @@
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
+#include "BMI088driver.h"
+#include "BMI088Middleware.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -45,7 +47,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+extern IMU_Data_t imu;
 /* USER CODE END Variables */
 osThreadId MotorHandle;
 
@@ -118,12 +120,16 @@ void MX_FREERTOS_Init(void) {
   * @retval None
   */
 /* USER CODE END Header_Motor_ControlTask */
-__weak void Motor_ControlTask(void const * argument)
+__weak void Motor_ControlTask(void const * argument)//弱符号声明，通常会被覆盖
 {
   /* USER CODE BEGIN Motor_ControlTask */
+
   /* Infinite loop */
   for(;;)
   {
+		
+    BMI088_Read(&imu);
+    
     osDelay(1);
   }
   /* USER CODE END Motor_ControlTask */

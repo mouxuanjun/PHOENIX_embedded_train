@@ -25,7 +25,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "IMU_BMI088.h"
+#include "BMI088.h"
+#include "VOFT_Uartx.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,6 +50,7 @@
 
 /* USER CODE END Variables */
 osThreadId MotorHandle;
+osThreadId myTask02Handle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -55,6 +58,7 @@ osThreadId MotorHandle;
 /* USER CODE END FunctionPrototypes */
 
 void Motor_ControlTask(void const * argument);
+void StartTask02(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -105,6 +109,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(Motor, Motor_ControlTask, osPriorityRealtime, 0, 256);
   MotorHandle = osThreadCreate(osThread(Motor), NULL);
 
+  /* definition and creation of myTask02 */
+  osThreadDef(myTask02, StartTask02, osPriorityBelowNormal, 0, 128);
+  myTask02Handle = osThreadCreate(osThread(myTask02), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -124,9 +132,31 @@ __weak void Motor_ControlTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
+//		BMI088_Read_Gyro_Data();
+//		VOFA_Tx();
     osDelay(1);
   }
   /* USER CODE END Motor_ControlTask */
+}
+
+/* USER CODE BEGIN Header_StartTask02 */
+/**
+* @brief Function implementing the myTask02 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask02 */
+void StartTask02(void const * argument)
+{
+  /* USER CODE BEGIN StartTask02 */
+  /* Infinite loop */
+  for(;;)
+  {
+		BMI088_Read_Gyro_Data();
+		VOFA_Tx();
+    osDelay(1);
+  }
+  /* USER CODE END StartTask02 */
 }
 
 /* Private application code --------------------------------------------------*/

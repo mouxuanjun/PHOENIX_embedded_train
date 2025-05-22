@@ -109,6 +109,14 @@ void BMI088_Read_Gyro_Data(void);
   * @attention 从这开始实际的频率编程 1600hz
   */
 void BMI088_Read_Acc_Data(void);
+/*!***************************************************
+ * @file: BMI088.c
+ * @brief: 用于读取传感器的温度
+ * @author:   
+ * @date: 2021/10/18
+ * @note:	读取出来温度进行温度补偿
+ ****************************************************/
+void BMI088_Read_TMP(float *temperate);
 
 /**
   * @brief 	读取温度     

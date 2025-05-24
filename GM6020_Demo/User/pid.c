@@ -49,7 +49,11 @@ static uint32_t sine_gen_last_tick = 0; // 上次调用发生器时的 Tick Coun
 // 预计算常量
 static float sine_gen_omega = 0.0f;
 static float sine_gen_omega_squared = 0.0f;
+float vresult=0;
+float checkpoint=0;
+float result=0;
 uint8_t begin=1;
+uint8_t begin2=1;
 
 //前馈
 float feedforward=0;
@@ -64,7 +68,7 @@ float generate_sine_target(void);                  // 正弦波发生器函数�
 
 extern QueueHandle_t Usb_queueHandle;
 
-float dt1=0.05,dt2=0.01;//dt1表示角度环的运行周期，dt2表示速度环的运行周期
+float dt=0.05,dt2=0.01;//dt1表示角度环的运行周期，dt2表示速度环的运行周期
 
 
 float wrap_error(float target, float measured) {
@@ -83,7 +87,7 @@ float wrap_error(float target, float measured) {
 float position_PID(float target, float current, PID *PosePID) {  // 使用指针传递
     static uint32_t past;
     uint32_t now = xTaskGetTickCount();
-    float dt = (now - past) * (1.0 / configTICK_RATE_HZ);  // 取消注释，计算时间差
+   // dt = (now - past) * (1.0 / configTICK_RATE_HZ);  // 取消注释，计算时间差
     past = now;
     
     // 计算前馈项
@@ -97,32 +101,34 @@ float position_PID(float target, float current, PID *PosePID) {  // 使用指针
 			begin=0;
 		}
     // 更新积分项，但不要重置为0
-    PosePID->integral += error* dt ;  // 乘以时间差
+    PosePID->integral += error*dt ;  // 乘以时间差
     
     // 积分限幅
     if(PosePID->integral < INTERGEL_MIN) PosePID->integral = INTERGEL_MIN;
     if(PosePID->integral > INTERGEL_MAX) PosePID->integral = INTERGEL_MAX;
     
     // 计算微分项，不要重置last_error为0
-    PosePID->derivative = (error - PosePID->last_error)/ dt ;  // 除以时间差
+    PosePID->derivative = (error - PosePID->last_error)/dt ;  // 除以时间差
     PosePID->last_error = error;  // 更新上次误差
     
     // 死区处理
     // if(fabs(error) <= 0.01) error = 0;
-    
+    float last_result=result;
     // 计算最终输出（包含前馈项）
-    float result = PosePID->P * error + 
+    result = PosePID->P * error + 
                    PosePID->I * PosePID->integral + 
                    PosePID->D * PosePID->derivative + 
                    PosePID->F * feedforward;  // 添加前馈项
     
+		//if(result-last_result>100)result=last_result;
+		
     return result;
 }
 
 float velocity_PID(float target, float current, PID *VelPID) {  // 使用指针传递
     static uint32_t Vpast;
     uint32_t now = xTaskGetTickCount();
-    float dt2 = (now - Vpast) * (1.0 / configTICK_RATE_HZ);
+   // dt2 = (now - Vpast) * (1.0 / configTICK_RATE_HZ);
     Vpast = now;
     
     // 不要重置积分和上次误差
@@ -130,9 +136,9 @@ float velocity_PID(float target, float current, PID *VelPID) {  // 使用指针�
     // VelPID.last_error = 0;  // 删除这行
     
     float error = target - current;
-    if(begin==1){
+    if(begin2==1){
 			VelPID->last_error=error;
-			begin=0;
+			begin2=0;
 		}
     // 死区处理
     if(fabs(error) <= 0.01) {
@@ -140,25 +146,27 @@ float velocity_PID(float target, float current, PID *VelPID) {  // 使用指针�
     }
     
     // 积分项计算
-    VelPID->integral += error * dt2;
-    
+    VelPID->integral += error;
+		if (dt2 < 1e-6f) dt2 = 1e-6f; 
+    checkpoint=dt2;
     // 积分限幅
     if(VelPID->integral < INTERGEL_MIN) VelPID->integral = INTERGEL_MIN;
     if(VelPID->integral > INTERGEL_MAX) VelPID->integral = INTERGEL_MAX;
     
     // 微分项计算
-    VelPID->derivative = (error - VelPID->last_error) / dt2;
+    VelPID->derivative = (error - VelPID->last_error);
     
     // 更新上次误差
     VelPID->last_error = error;
     
     // 计算前馈项（需要在外部定义或传入feedforward）
-    float feedforward = 0.1*(error-VelPID->last_error); // 这里应该定义前馈项或从外部传入
+    float feedforward = 0.1f*(error-VelPID->last_error); // 这里应该定义前馈项或从外部传入
     
     // 计算最终输出
-    float vresult = VelPID->P * error + 
+    vresult = VelPID->P * error + 
                     VelPID->I * VelPID->integral + 
                     VelPID->D * VelPID->derivative;
+	
     
     return vresult + (feedforward * VelPID->F);
 }
@@ -177,11 +185,11 @@ float velocity_PID_incre(float target, float current,PID VelPID) {
 	  if(fabs(error)<=0.01){
 		  error=0;
 		}
-    vintegral += error * dt2;
+    vintegral += error ;
 		//积分限幅
 	  vintegral=(vintegral<INTERGEL_MIN)?INTERGEL_MIN:vintegral;
 	  vintegral=(vintegral>INTERGEL_MAX)?INTERGEL_MAX:vintegral;
-    float vderivative = (error - vlast_error) / dt2;
+    float vderivative = (error - vlast_error);
     
     vlast_error = error;
     float vresult = VelPID.P*error + VelPID.I*vintegral + VelPID.D*vderivative;
@@ -255,4 +263,5 @@ float generate_sine_target(void) {
 float limit(float value,float MAX,float MIN){
 	value=(value<MIN)?MIN:value;
 	value=(value>MAX)?MAX:value;
+	return value;
 }

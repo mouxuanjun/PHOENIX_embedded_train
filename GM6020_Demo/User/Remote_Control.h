@@ -31,6 +31,6 @@ uint16_t v;
 }key; 
 }RC_Ctl_t; 
 
-void RC_init();
+void RC_init(void);
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle);
 #endif

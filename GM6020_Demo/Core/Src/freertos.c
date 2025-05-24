@@ -62,7 +62,7 @@ extern PID VelPID_yaw;
 extern PID VelPID_pitch;
 
 extern CAN_RxHeaderTypeDef rx_header;//can总线接受的接收区头
-//extern uint8_t rx_data[8];
+extern uint8_t rx_data[8];
 BaseType_t xStatus2;
 //uint16_t target=100;
 /* USER CODE END Variables */
@@ -143,15 +143,15 @@ void MX_FREERTOS_Init(void) {
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of GM6020_Task */
-  osThreadDef(GM6020_Task, StartTask02, osPriorityBelowNormal, 0, 512);
+  osThreadDef(GM6020_Task, StartTask02, osPriorityAboveNormal, 0, 512);
   GM6020_TaskHandle = osThreadCreate(osThread(GM6020_Task), NULL);
 
   /* definition and creation of GM6020_Task_inn */
-  osThreadDef(GM6020_Task_inn, StartTask03, osPriorityNormal, 0, 512);
+  osThreadDef(GM6020_Task_inn, StartTask03, osPriorityAboveNormal, 0, 512);
   GM6020_Task_innHandle = osThreadCreate(osThread(GM6020_Task_inn), NULL);
 
   /* definition and creation of CAN_input_task */
-  osThreadDef(CAN_input_task, StartTask04, osPriorityBelowNormal, 0, 128);
+  osThreadDef(CAN_input_task, StartTask04, osPriorityRealtime, 0, 128);
   CAN_input_taskHandle = osThreadCreate(osThread(CAN_input_task), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -327,28 +327,30 @@ void StartTask03(void const * argument)
 				
 			}
 		}
+		
 		  // 检查是否成功接收到数据
     if (xStatus == pdPASS)
     {
       // 成功接收到数据，现在 received_target_velocity 包含了 Task02 发送的值
       // 使用接收到的值作为速度PID的目标值
-			GM6020.Set_Speed=received_target_velocity_f;
+			
 			received_target_velocity_f=(received_target_velocity_f>=340)?340:received_target_velocity_f;
 			received_target_velocity_f=(received_target_velocity_f<=-340)?-340:received_target_velocity_f;
 			
+			GM6020.Set_Speed=received_target_velocity_f;
 			received_target_velocity2_f=(received_target_velocity2_f>=340)?340:received_target_velocity2_f;
 			received_target_velocity2_f=(received_target_velocity2_f<=-340)?-340:received_target_velocity2_f;
-			float temp_result = velocity_PID(received_target_velocity_f, GM6020.rotor_speed,&VelPID_yaw);
+			//float temp_result = velocity_PID(received_target_velocity_f, GM6020.rotor_speed,&VelPID_yaw);
       float temp_result2 = velocity_PID(received_target_velocity2_f, GM6020_pitch.rotor_speed,&VelPID_pitch);
-        //float temp_result2 = velocity_PID(GM6020.Set_Speed, GM6020.rotor_speed);
-			
+      float temp_result = velocity_PID(GM6020.Set_Speed, GM6020.rotor_speed,&VelPID_yaw);
+			//GM6020.test=temp_result;
       
       // temp_result2 （目标电压）需要转换类型。
       int16_t motor_command = (int16_t)temp_result; 
       motor_command = (motor_command > 25000) ? 25000 : motor_command; // 限制上限
       motor_command = (motor_command < -25000) ? -25000 : motor_command; // 限制下限
 			
-      //GM6020.test=motor_command;//第一个电机控制的是yaw轴喔
+      GM6020.test=motor_command;//第一个电机控制的是yaw轴喔
 			Send_GM6020_Motor_Message(0x00, 0x00,motor_command, 0x00); 
     }
     else
@@ -358,7 +360,7 @@ void StartTask03(void const * argument)
       Send_GM6020_Motor_Message(0x00, 0x00, 0x00, 0x00);
       // printf("Failed to receive from queue\n"); // 调试信息
     }
-		osDelay(0);
+		osDelay(1);
   }
   /* USER CODE END StartTask03 */
 }
@@ -378,12 +380,12 @@ void StartTask04(void const * argument)
   { 
 		
    
-//    if (CAN_Input == 1) {
-//      /* 信号到达后的处理流程 */
-//      Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
-//      CAN_Input=0;
-//      /* 处理完成后自动回到循环开头，再次进入阻塞 */
-//    }
+    if (CAN_Input == 1) {
+      /* 信号到达后的处理流程 */
+      Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
+      CAN_Input=0;
+      /* 处理完成后自动回到循环开头，再次进入阻塞 */
+    }
 		
 	
 		

@@ -180,6 +180,10 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
             DM4310_4.Update();
             break;
         }
+        case 0x016:case 0x116:case 0x216:{
+            DM4310_4.Update();
+            break;
+        }
         }
     }
 }

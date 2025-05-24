@@ -26,7 +26,7 @@ extern RC_t RC;
 extern uint8_t RC_Data[18];
 
 float pitch = 0.0f;
-float yaw = 0.0f;
+float yaw = 2.0f;
 
 void CPP_Motor_Task() {
     HAL_UART_Receive_DMA(&huart3, RC_Data, 18);
@@ -58,13 +58,13 @@ void CPP_Motor_Task() {
         // DM4340_2.Ctrl_SpeedPosition_Mode(0.0f,5.0f);
 #endif
         if (RC.s1 == 3 && RC.s2 == 3) {
-            pitch += 0.023f*(RC.ch1/660.0f);
-            yaw += 0.008f*(RC.ch0/660.0f);
+            pitch += 0.008f*(RC.ch1/660.0f);
+            yaw -= 0.007f*(RC.ch0/660.0f);
             Math_Constrain(yaw,1.2f,3.2f);
-            Math_Constrain(pitch,-1.5f,2.1f);
+            Math_Constrain(pitch,-0.35f,0.55f);
             GM6020_3.Ctrl_Angle(yaw);
             GM6020_All1.Ctrl_Current();
-            DM4310_1.Ctrl_Angle(pitch+1.6f);
+            DM4310_1.Ctrl_Angle(pitch+0.38f);
         }else if (RC.s1 == 3 && RC.s2 ==1) {
             // cnt = (cnt == 8000) ? 0 : cnt + 1;
             // pitch = 1 + 3 * sin(2 * PI * (1.0f / 8000) * cnt);

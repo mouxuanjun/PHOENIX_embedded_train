@@ -57,7 +57,8 @@ void CPP_Motor_Task() {
 #elifdef DEV_DM4310
         cnt = (cnt == 8000) ? 0 : cnt + 1;
         P = 3+ 3 * sin(2 * PI * (1.0f / 8000) * cnt);
-        DM4310_4.Ctrl_Angle(P);
+        DM4310_4.Ctrl_MIT_Mode(0.0f,0.0f,0.0f,0.0f,1.0f);
+        // DM4310_4.Ctrl_Angle(P);
         // DM4340_2.Ctrl_SpeedPosition_Mode(0.0f,5.0f);
 #endif
 

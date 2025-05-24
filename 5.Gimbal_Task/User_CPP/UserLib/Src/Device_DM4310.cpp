@@ -49,18 +49,18 @@ void DM4310::Init(DM_Type _motor_type,uint8_t _id, CAN_HandleTypeDef* _hcan, DM_
                    0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
                    0.0f, CPP_PID_DFirst_Enable);
     CPP_PID_Params_t DM4310_pid_speed = {
-        0.65f, 0.55f, 5.0f, 0.6f,
+        0.45f, 0.3f, 25.0f, 0.6f,
         5.0f, 18.0f
     };
     pid_speed.Set_params(&DM4310_pid_speed);
     pid_speed.Set_DFirst(CPP_PID_DFirst_Enable);
 
     pid_angle.Init(DM4310_angle, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                   0.0f, 0.0f, 0.01f, 0.0f, 0.0f,
-                   0.0f, CPP_PID_DFirst_Enable);
+                   0.0f, 0.0f, 0.1f, 0.0f, 0.0f,
+                   0.02f, CPP_PID_DFirst_Enable);
     CPP_PID_Params_t DM4310_pid_angle = {
-        11.0f, 3.0f, 20.0f, 0.0f,
-        35.0f, 60.0f
+        35.0f, 1.0f, 5.0f, 35.0f,
+        15.0f, 60.0f
     };
     pid_angle.Set_params(&DM4310_pid_angle);
     pid_angle.Set_DFirst(CPP_PID_DFirst_Enable);

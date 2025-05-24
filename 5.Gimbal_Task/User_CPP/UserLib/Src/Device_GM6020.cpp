@@ -19,7 +19,7 @@ void GM6020::Init(uint8_t id, CAN_HandleTypeDef* hcan) {
                    0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
                    0.0f, CPP_PID_DFirst_Enable);
     CPP_PID_Params_t GM6020_pid_speed = {
-        30.0f, 1500.0f, 1000.0f, 10.0f,
+        300.0f, 1500.0f, 1500.0f, 170.0f,
         9000.0f, 23900.0f
     };
     pid_speed.Set_params(&GM6020_pid_speed);
@@ -29,8 +29,8 @@ void GM6020::Init(uint8_t id, CAN_HandleTypeDef* hcan) {
                    0.0f, 0.0f, 50.0f, 0.0f, 0.0f,
                    0.0f, CPP_PID_DFirst_Enable);
     CPP_PID_Params_t GM6020_pid_angle = {
-        0.06f, 0.006f, 400.0f, 0.01f,
-        1000.0f, 5000.0f
+        0.165f, 0.004f, 3000.0f, 3.5f,
+        800.0f, 5000.0f
     };
     pid_angle.Set_params(&GM6020_pid_angle);
     pid_angle.Set_DFirst(CPP_PID_DFirst_Enable);
@@ -80,6 +80,7 @@ void GM6020::Ctrl_Speed(int16_t Speed) {
 }
 
 void GM6020::Ctrl_Current(int16_t current) {
+    // Math_Constrain(current, (int16_t)-16000, (int16_t)16000);
     target_current = current;
 }
 

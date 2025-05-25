@@ -27,6 +27,7 @@ extern uint8_t RC_Data[18];
 
 float pitch = 0.0f;
 float yaw = 2.0f;
+char flag = 1;
 
 void CPP_Motor_Task() {
     HAL_UART_Receive_DMA(&huart3, RC_Data, 18);
@@ -66,15 +67,17 @@ void CPP_Motor_Task() {
             GM6020_All1.Ctrl_Current();
             DM4310_1.Ctrl_Angle(pitch+0.38f);
         }else if (RC.s1 == 3 && RC.s2 ==1) {
-            // cnt = (cnt == 8000) ? 0 : cnt + 1;
-            // pitch = 1 + 3 * sin(2 * PI * (1.0f / 8000) * cnt);
-            // Math_Constrain(pitch,-1.5f,2.1f);
-            // DM4310_1.Ctrl_Angle(pitch);
-            pitch = 0.0f;
-            yaw = 2.0f;
-            DM4310_1.Ctrl_MIT_Mode(0.0f,0.0f,0.0f,0.0f,0.0f);
-            GM6020_3.Ctrl_Current(0.0);
+            if (yaw <= 1.2f) flag = 1;
+            else if (yaw >= 3.2f) flag = 2;
+            if (flag == 1) {yaw += 0.00045f;}
+            else if (flag == 2) {yaw -= 0.00045f;}
+            cnt = (cnt == 1200) ? 0 : cnt + 1;
+            pitch = 0.04 + 0.34 * sin(2 * PI * (1.0f / 1200) * cnt);
+            Math_Constrain(yaw,1.2f,3.2f);
+            Math_Constrain(pitch,-0.35f,0.55f);
+            GM6020_3.Ctrl_Angle(yaw);
             GM6020_All1.Ctrl_Current();
+            DM4310_1.Ctrl_Angle(pitch+0.38f);
         }else {
             pitch = 0.0f;
             yaw = 2.0f;

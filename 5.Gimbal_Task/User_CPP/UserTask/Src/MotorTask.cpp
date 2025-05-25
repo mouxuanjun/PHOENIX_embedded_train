@@ -58,8 +58,8 @@ void CPP_Motor_Task() {
         // DM4340_2.Ctrl_SpeedPosition_Mode(0.0f,5.0f);
 #endif
         if (RC.s1 == 3 && RC.s2 == 3) {
-            pitch += 0.008f*(RC.ch1/660.0f);
-            yaw -= 0.007f*(RC.ch0/660.0f);
+            pitch += 0.006f*(RC.ch1/660.0f);
+            yaw -= 0.012f*(RC.ch0/660.0f);
             Math_Constrain(yaw,1.2f,3.2f);
             Math_Constrain(pitch,-0.35f,0.55f);
             GM6020_3.Ctrl_Angle(yaw);

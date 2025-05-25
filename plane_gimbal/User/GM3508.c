@@ -24,10 +24,6 @@ void GM3508_RxData(uint32_t StdId, uint8_t rx_data[8]){
 
 void GM3508_task(void const * argument){
 	while(1){
-//  	pid_angle_control(&rc_3508[0].GM3508_angle, rc_3508[0].current_angle, rc_3508[0].GM3508_angle.target_angle);
-//	    pid_angle_control(&rc_3508[1].GM3508_angle, rc_3508[1].current_angle, rc_3508[1].GM3508_angle.target_angle);
-//      rc_3508[0].GM3508_velocity.target_velocity = rc_3508[0].GM3508_angle.PID_angle_out;
-//	    rc_3508[1].GM3508_velocity.target_velocity = rc_3508[1].GM3508_angle.PID_angle_out;
 //      pid_velocity_control(&rc_3508[0].GM3508_velocity, rc_3508[0].current_velocity, rc_3508[0].GM3508_velocity.target_velocity);
 //	    pid_velocity_control(&rc_3508[1].GM3508_velocity, rc_3508[1].current_velocity, rc_3508[1].GM3508_velocity.target_velocity);
 //      GM3508_Control(rc_3508[0].GM3508_velocity.PID_velocity_out, rc_3508[1].GM3508_velocity.PID_velocity_out);   	

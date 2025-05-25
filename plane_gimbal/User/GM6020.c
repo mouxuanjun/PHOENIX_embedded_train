@@ -1,4 +1,4 @@
-#include "Gm6020.h"
+#include "GM6020.h"
 
 /**
  * @brief GM6020电机数据的读取
@@ -18,9 +18,11 @@ void GM6020_RxData(uint32_t StdId, uint8_t rx_data[8]){
  * @param GM6020的电机的当前和目标的速度和角度
  */
 void GM6020_task(void const * argument){
+    pid_velocity_init(&rc_6020.GM6020_velocity, 160, 2, 0, 20000);                                       //GM6020速度环初始化
+	pid_angle_init(&rc_6020.GM6020_angle, 1.2, 0.001, 0, 20000, 320, 8192);                              //GM6020角度环初始化
     while (1) {
-//		control(&rc_ctrl, &rc_6020.GM6020_angle.target_angle);
-        Limit(&rc_6020.GM6020_angle, 6700, 3700);
+		control(&rc_ctrl, &rc_6020.GM6020_angle.target_angle, 0x208);
+        Limit(&rc_6020.GM6020_angle, 7300, 4300);
         pid_angle_control(&rc_6020.GM6020_angle, rc_6020.current_angle, rc_6020.GM6020_angle.target_angle);
         rc_6020.GM6020_velocity.target_velocity = rc_6020.GM6020_angle.PID_angle_out;
         pid_velocity_control(&rc_6020.GM6020_velocity, rc_6020.current_velocity, rc_6020.GM6020_velocity.target_velocity);

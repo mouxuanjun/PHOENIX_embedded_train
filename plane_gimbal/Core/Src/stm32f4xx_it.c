@@ -42,7 +42,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-uint8_t rx_data_Dbus[18];
+extern uint8_t rx_data[18];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -170,11 +170,11 @@ void DebugMon_Handler(void)
 void DMA1_Stream1_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Stream1_IRQn 0 */
-  RemoteDataProcess(&rc_ctrl, rx_data_Dbus);
+
   /* USER CODE END DMA1_Stream1_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_usart3_rx);
   /* USER CODE BEGIN DMA1_Stream1_IRQn 1 */
-
+  RemoteDataProcess(&rc_ctrl, rx_data);
   /* USER CODE END DMA1_Stream1_IRQn 1 */
 }
 

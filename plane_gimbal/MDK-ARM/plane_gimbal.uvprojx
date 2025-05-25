@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -600,36 +600,6 @@
           <GroupName>User</GroupName>
           <Files>
             <File>
-              <FileName>pid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\pid.c</FilePath>
-            </File>
-            <File>
-              <FileName>pid.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\User\pid.h</FilePath>
-            </File>
-            <File>
-              <FileName>GM6020.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\GM6020.c</FilePath>
-            </File>
-            <File>
-              <FileName>GM6020.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\User\GM6020.h</FilePath>
-            </File>
-            <File>
-              <FileName>DM4310.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\DM4310.c</FilePath>
-            </File>
-            <File>
-              <FileName>DM4310.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\User\DM4310.h</FilePath>
-            </File>
-            <File>
               <FileName>bsp_can.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\bsp_can.c</FilePath>
@@ -650,6 +620,16 @@
               <FilePath>..\User\DBUS.h</FilePath>
             </File>
             <File>
+              <FileName>DM4310.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\DM4310.c</FilePath>
+            </File>
+            <File>
+              <FileName>DM4310.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\DM4310.h</FilePath>
+            </File>
+            <File>
               <FileName>GM3508.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\GM3508.c</FilePath>
@@ -658,6 +638,26 @@
               <FileName>GM3508.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\User\GM3508.h</FilePath>
+            </File>
+            <File>
+              <FileName>GM6020.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\GM6020.c</FilePath>
+            </File>
+            <File>
+              <FileName>GM6020.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\GM6020.h</FilePath>
+            </File>
+            <File>
+              <FileName>pid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\pid.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\pid.h</FilePath>
             </File>
           </Files>
         </Group>

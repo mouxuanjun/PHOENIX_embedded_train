@@ -6,13 +6,7 @@
 #include "cmsis_os.h"
 #include "bsp_can.h"
 #include "DBUS.h"
-
-#define P_MIN -12.5
-#define P_MAX 12.5
-#define V_MIN -45
-#define V_MAX 45
-#define T_MIN -18
-#define T_MAX 18
+#include "math.h"
 
 typedef struct {
     float error_code;

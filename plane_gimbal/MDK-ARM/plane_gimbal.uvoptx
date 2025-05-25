@@ -164,6 +164,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>rc_6020,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>rc_ctrl,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\plane_gimbal\../Core/Src/main.c\rc_6020.GM6020_angle.Ki_a</ItemText>
+        </Ww>
       </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
@@ -567,7 +577,7 @@
 
   <Group>
     <GroupName>Drivers/CMSIS</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -726,8 +736,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\User\pid.c</PathWithFileName>
-      <FilenameWithoutPath>pid.c</FilenameWithoutPath>
+      <PathWithFileName>..\User\bsp_can.c</PathWithFileName>
+      <FilenameWithoutPath>bsp_can.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -738,8 +748,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\User\pid.h</PathWithFileName>
-      <FilenameWithoutPath>pid.h</FilenameWithoutPath>
+      <PathWithFileName>..\User\bsp_can.h</PathWithFileName>
+      <FilenameWithoutPath>bsp_can.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -750,8 +760,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\User\GM6020.c</PathWithFileName>
-      <FilenameWithoutPath>GM6020.c</FilenameWithoutPath>
+      <PathWithFileName>..\User\DBUS.c</PathWithFileName>
+      <FilenameWithoutPath>DBUS.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -762,8 +772,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\User\GM6020.h</PathWithFileName>
-      <FilenameWithoutPath>GM6020.h</FilenameWithoutPath>
+      <PathWithFileName>..\User\DBUS.h</PathWithFileName>
+      <FilenameWithoutPath>DBUS.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -798,8 +808,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\User\bsp_can.c</PathWithFileName>
-      <FilenameWithoutPath>bsp_can.c</FilenameWithoutPath>
+      <PathWithFileName>..\User\GM3508.c</PathWithFileName>
+      <FilenameWithoutPath>GM3508.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -810,8 +820,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\User\bsp_can.h</PathWithFileName>
-      <FilenameWithoutPath>bsp_can.h</FilenameWithoutPath>
+      <PathWithFileName>..\User\GM3508.h</PathWithFileName>
+      <FilenameWithoutPath>GM3508.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -822,8 +832,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\User\DBUS.c</PathWithFileName>
-      <FilenameWithoutPath>DBUS.c</FilenameWithoutPath>
+      <PathWithFileName>..\User\GM6020.c</PathWithFileName>
+      <FilenameWithoutPath>GM6020.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -834,8 +844,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\User\DBUS.h</PathWithFileName>
-      <FilenameWithoutPath>DBUS.h</FilenameWithoutPath>
+      <PathWithFileName>..\User\GM6020.h</PathWithFileName>
+      <FilenameWithoutPath>GM6020.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -846,8 +856,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\User\GM3508.c</PathWithFileName>
-      <FilenameWithoutPath>GM3508.c</FilenameWithoutPath>
+      <PathWithFileName>..\User\pid.c</PathWithFileName>
+      <FilenameWithoutPath>pid.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -858,8 +868,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\User\GM3508.h</PathWithFileName>
-      <FilenameWithoutPath>GM3508.h</FilenameWithoutPath>
+      <PathWithFileName>..\User\pid.h</PathWithFileName>
+      <FilenameWithoutPath>pid.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

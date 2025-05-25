@@ -17,7 +17,7 @@ void pid_velocity_init(pid_v * pid_velocity, float Kp, float Ki, float Kd, float
  * @brief 角度环的初始化
  * @param 角度环的结构体
  */
-void pid_angle_init(pid_a * pid_angle, float Kp, float Ki, float Kd, float MAX, float limit_form, float init){
+void pid_angle_init(pid_a * pid_angle, float Kp, float Ki, float Kd, float MAX, float limit_form, float zero_pro_form){
     pid_angle -> error = 0;
     pid_angle -> error_last = 0;
     pid_angle -> target_angle = pid_angle -> current_angle;
@@ -26,6 +26,7 @@ void pid_angle_init(pid_a * pid_angle, float Kp, float Ki, float Kd, float MAX, 
     pid_angle -> Kd_a = Kd;
     pid_angle -> limit = limit_form;
     pid_angle -> MAX_I = MAX;
+	pid_angle -> zero_pro = zero_pro_form;
 }
 
 /**
@@ -69,12 +70,11 @@ float pid_angle_control(pid_a * pid_angle, float current_angle_form, float targe
     pid_angle -> error_last = pid_angle -> error;	
     pid_angle -> error = pid_angle -> target_angle - pid_angle -> current_angle;	
 	//过零保护
-	if (target_angle_form - current_angle_form >= 4096) {
-		pid_angle -> error -= 8192;
+	if (target_angle_form - current_angle_form >= pid_angle -> zero_pro / 2) {
+		pid_angle -> error -= pid_angle -> zero_pro;
 	}
-	else if(target_angle_form - current_angle_form <= -4096)
-	{
-		pid_angle -> error += 8192;
+	else if(target_angle_form - current_angle_form <= -pid_angle -> zero_pro / 2){
+		pid_angle -> error += pid_angle -> zero_pro;
 	}
 
     pid_angle -> Kp_a_out = pid_angle -> Kp_a * pid_angle -> error;

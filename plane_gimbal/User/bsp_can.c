@@ -87,13 +87,9 @@ void GM6020_Control(int16_t motor){
  * @note 电机ID和解算
  */
 void DM4310_Control(uint16_t id, float angle, float velocity, float Kp, float Kd, float torque){ 
-	uint8_t tx_data[8];
+	uint8_t tx_data[8] = {0};
     CAN_TxHeaderTypeDef tx_header;
-    uint16_t a_tmp, v_tmp, kp_tmp, kd_tmp, tor_tmp;
-    a_tmp = float_to_uint(angle, P_MIN, P_MAX, 16);
-    v_tmp = float_to_uint(velocity, V_MIN, V_MAX, 12);
-    kp_tmp = float_to_uint(Kp, KP_MIN, KP_MAX, 12);
-    kd_tmp = float_to_uint(Kd, KD_MIN, KD_MAX, 12);
+    uint16_t tor_tmp;
     tor_tmp = float_to_uint(torque, T_MIN, T_MAX, 12);
 
     tx_header.StdId = 0x01;
@@ -101,13 +97,7 @@ void DM4310_Control(uint16_t id, float angle, float velocity, float Kp, float Kd
     tx_header.RTR = CAN_RTR_DATA;
     tx_header.DLC = 8;
 
-    tx_data[0] = (a_tmp >> 8);
-    tx_data[1] = a_tmp;
-    tx_data[2] = (v_tmp >> 4);
-    tx_data[3] = ((v_tmp & 0xF) << 4) | (kp_tmp >> 8);
-    tx_data[4] = kp_tmp;
-    tx_data[5] = (kd_tmp >> 4);
-    tx_data[6] = ((kd_tmp & 0xF) << 4)|(tor_tmp >> 8);
+    tx_data[6] = (tor_tmp >> 8);
     tx_data[7] = tor_tmp;
 
 	HAL_CAN_AddTxMessage(&hcan1, &tx_header, tx_data, (uint32_t *)CAN_TX_MAILBOX0);  

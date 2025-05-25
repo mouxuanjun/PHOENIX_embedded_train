@@ -11,10 +11,6 @@
 #define P_MAX 12.5
 #define V_MIN -45
 #define V_MAX 45
-#define KP_MIN 0.0
-#define KP_MAX 500.0
-#define KD_MIN 0.0
-#define KD_MAX 5.0
 #define T_MIN -18
 #define T_MAX 18
 

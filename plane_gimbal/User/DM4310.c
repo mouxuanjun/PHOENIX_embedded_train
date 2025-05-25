@@ -37,7 +37,7 @@ void if_enable(void){
         if (cnt >= 10){
             break;
         }
-   }
+    }
 }
 
 /**
@@ -58,16 +58,26 @@ void DM4310_RxData(uint32_t StdId, uint8_t rx_data[8]){
 }
 
 /**
- * @brief DM4310电机pid的调用
- * @param DM4310电机的当前和目标的速度和角度
+ * @brief DM4310电机任务
  */
 void DM4310_task(void const * argument){
+	pid_angle_init(&rc_4310.DM4310_angle, 14, 0.1, 0.001, 5000, 45, 12.5 * 2);                                         //DM4310角度环初始化
+    pid_velocity_init(&rc_4310.DM4310_velocity, 0.95, 0.06, 0.9, 5000);                                           	   //DM4310速度环初始化
     while (1) {
         if_enable();
-//		control(&rc_ctrl, &rc_4310.DM4310_angle.target_angle);
-        Limit(&rc_4310.DM4310_angle, 0.5, -0.4);
+		control(&rc_ctrl, &rc_4310.DM4310_angle.target_angle, 0x01);
+        Limit(&rc_4310.DM4310_angle, 0.5, -0.25);
         pid_angle_control(&rc_4310.DM4310_angle, rc_4310.current_angle, rc_4310.DM4310_angle.target_angle);
         rc_4310.DM4310_velocity.target_velocity = rc_4310.DM4310_angle.PID_angle_out;
+		if (rc_4310.DM4310_velocity.PID_velocity_out > 18.0f){
+            rc_4310.DM4310_velocity.PID_velocity_out = 18.0f;
+        }
+        if (rc_4310.DM4310_velocity.PID_velocity_out < -18.0f){
+            rc_4310.DM4310_velocity.PID_velocity_out = -18.0f;
+        }
+		if (abs(rc_4310.DM4310_velocity.current_velocity) > 0.04){
+			rc_4310.DM4310_velocity.current_velocity = 0;
+		}
         pid_velocity_control(&rc_4310.DM4310_velocity, rc_4310.current_velocity, rc_4310.DM4310_velocity.target_velocity);
         DM4310_Control(0x01, 0, 0, 0, 0, rc_4310.DM4310_velocity.PID_velocity_out);
         osDelay(1);

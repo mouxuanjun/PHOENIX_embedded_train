@@ -159,7 +159,7 @@
           <Type>0</Type>
           <LineNumber>290</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134236336</Address>
+          <Address>134236308</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -169,6 +169,22 @@
           <Filename>../Core/Src/freertos.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\\../Core/Src/freertos.c\290</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>360</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134236814</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>../Core/Src/freertos.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\GM6020_Demo\../Core/Src/freertos.c\360</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -210,7 +226,7 @@
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\GM6020_Demo\../Core/Src/main.c\GM6020_pitch</ItemText>
+          <ItemText>\\GM6020_Demo\../Core/Src/main.c\GM6020_pitch,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>8</count>

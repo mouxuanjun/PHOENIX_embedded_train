@@ -250,19 +250,17 @@ void StartTask02(void const * argument)
 				}
 				
 			}else if(temp_message==MSG_MAGIC3){
-				xQueueReceive(RCqueueHandle, &received_target_angle, xTicksToWait);
+					xQueueReceive(RCqueueHandle, &received_target_angle, xTicksToWait);
 				received_traget_angle_f=(float)received_target_angle;
 				GM6020_pitch.Set_Angle+=(received_traget_angle_f-1024)*0.1;
 				
-				
-				if(GM6020_pitch.Set_Angle>=8192){
-					GM6020_pitch.Set_Angle=0;
+				if(GM6020_pitch.Set_Angle>=2330){
+					GM6020_pitch.Set_Angle=2330;
 				}
-				if(GM6020_pitch.Set_Angle<0){
-					GM6020_pitch.Set_Angle+=8191;
+				if(GM6020_pitch.Set_Angle<1090){
+					GM6020_pitch.Set_Angle=1090;
 				}
-				
-			 }
+			}
 			
 			
 	  }
@@ -349,9 +347,11 @@ void StartTask03(void const * argument)
       int16_t motor_command = (int16_t)temp_result; 
       motor_command = (motor_command > 25000) ? 25000 : motor_command; // 限制上限
       motor_command = (motor_command < -25000) ? -25000 : motor_command; // 限制下限
-			
+			int16_t motor_command2 = (int16_t)temp_result2; 
+      motor_command2 = (motor_command2 > 25000) ? 25000 : motor_command2; // 限制上限
+      motor_command2 = (motor_command2 < -25000) ? -25000 : motor_command2; // 限制下限
       GM6020.test=motor_command;//第一个电机控制的是yaw轴喔
-			Send_GM6020_Motor_Message(0x00, 0x00,motor_command, 0x00); 
+			Send_GM6020_Motor_Message(motor_command2, 0x00,motor_command, 0x00); 
     }
     else
     {

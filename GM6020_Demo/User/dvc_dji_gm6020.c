@@ -1,120 +1,215 @@
 #include "dvc_dji_gm6020.h"
 #include "dri_can.h"
+#include <math.h>
+#include <string.h>
+
 HAL_StatusTypeDef can_1;
-#define Motor_1_ID 0x207
-#define Motor_2_ID 0x205
 extern Moto_GM6020_t GM6020;
 extern Moto_GM6020_t GM6020_pitch;
-#define CAN_CHASSIS_ALL_ID 0x1FF           //标识符的id
-#define CHASSIS_CAN hcan1
-#define CHASSIS_CAN2 hcan2
+
 uint8_t chassis_can_send_data[8];
-//uint8_t test2=0;
-float last_value;
+volatile uint32_t temp3;
+
+// GM6020编码器参数
+#define ENCODER_MAX_VALUE 8191
+#define ENCODER_RANGE 8192
+#define ENCODER_HALF_RANGE 4096
+
+// 滤波器状态结构体（简化版）
+typedef struct {
+    float last_valid_angle;    // 上次有效角度值
+    float last_valid_speed;    // 上次有效速度值
+    uint8_t initialized;       // 初始化标志
+} SimpleFilterState;
+
+// 全局滤波器状态
+static SimpleFilterState motor_207_filter = {0};
+static SimpleFilterState motor_205_filter = {0};
+
 /**
- * @file GM6020.c
- * @brief GM6020���ܷ������ĺ���
- * @param StdId ���ID
- * @param rx_data CANͨ���յ�������
- * @author HWX
- * @editor CGH
- * @date 2025/5/16
+ * @brief 计算考虑回绕的真实角度变化
+ * @param new_angle 新角度值
+ * @param old_angle 旧角度值
+ * @return 真实的角度变化量
  */
- volatile uint32_t temp3;
- /**
- * @brief 限幅滤波函数（改进版）
- * @param[in] new_val 本次采集的原始传感器值
- * @param[in,out] last_val 指向上次有效值的指针（函数内部会更新）
- * @param[in] max_step 允许的最大单步变化量（默认值500.0）
- * @param[in] smooth_factor 平滑系数（0.0~1.0，0表示无平滑）
- * @return float 处理后的有效值
- * @note 
- * - 当变化量超过max_step时，输出值会渐变过渡
- * - 建议初始化时设置合理的last_val初始值
- * @warning 禁止在多线程环境不加锁直接使用
- * @example
- * float last = 0.0f;
- * float filtered = advanced_filter(600.0f, &last, 500.0f, 0.2f); 
- * // 输出last将变为500.0
- */
-float filter(float new_val, float last_val) {
-    // 使用绝对值比较双向突变
-    if(new_val - last_val > 1000.0f||new_val-last_val< -1000.0f) { 
-        // 返回上次值作为本次有效值
-        return last_val;
+float get_real_angle_change(float new_angle, float old_angle) {
+    float diff = new_angle - old_angle;
+    
+    // 处理回绕情况，获取真实的小变化量
+    if (diff > ENCODER_HALF_RANGE) {
+        return diff - ENCODER_RANGE;  // 正向回绕：8191→0 实际是+1
+    } else if (diff < -ENCODER_HALF_RANGE) {
+        return diff + ENCODER_RANGE;  // 反向回绕：0→8191 实际是-1  
     }
-    // 正常情况返回当前值
-    return new_val;
+    
+    return diff;  // 正常变化，无回绕
 }
 
+/**
+ * @brief 简单直接的角度滤波器 - 丢弃异常斜率
+ * @param new_angle 新角度值
+ * @param filter_state 滤波器状态
+ * @param max_change_threshold 最大允许变化阈值
+ * @return 有效的角度值（异常直接用上次值）
+ */
+float simple_angle_filter(float new_angle, SimpleFilterState* filter_state, float max_change_threshold) {
+    // 首次初始化
+    if (!filter_state->initialized) {
+        filter_state->last_valid_angle = new_angle;
+        filter_state->initialized = 1;
+        return new_angle;
+    }
+    
+    // 计算真实变化量（考虑回绕）
+    float real_change = get_real_angle_change(new_angle, filter_state->last_valid_angle);
+    
+    // 判断变化是否过大
+    if (fabsf(real_change) > max_change_threshold) {
+        // **直接丢弃异常数据，返回上次有效值**
+        return filter_state->last_valid_angle;
+    }
+    
+    // 数据正常，更新并返回
+    filter_state->last_valid_angle = new_angle;
+    return new_angle;
+}
 
-void Get_GM6020_Motor_Message(uint32_t StdId,uint8_t rx_data[8])
+/**
+ * @brief 简单直接的速度滤波器 - 丢弃异常变化
+ * @param new_speed 新速度值
+ * @param filter_state 滤波器状态
+ * @param max_change_threshold 最大允许变化阈值
+ * @return 有效的速度值
+ */
+float simple_speed_filter(float new_speed, SimpleFilterState* filter_state, float max_change_threshold) {
+    // 首次初始化
+    if (!filter_state->initialized) {
+        filter_state->last_valid_speed = new_speed;
+        return new_speed;
+    }
+    
+    // 计算速度变化
+    float speed_change = fabsf(new_speed - filter_state->last_valid_speed);
+    
+    // 判断变化是否过大
+    if (speed_change > max_change_threshold) {
+        // **直接丢弃异常数据，返回上次有效值**
+        return filter_state->last_valid_speed;
+    }
+    
+    // 数据正常，更新并返回
+    filter_state->last_valid_speed = new_speed;
+    return new_speed;
+}
+
+/**
+ * @brief GM6020电机消息接收处理函数
+ */
+void Get_GM6020_Motor_Message(uint32_t StdId, uint8_t rx_data[8])
 {
-		temp3 = StdId;
-    switch(StdId)//����ָ�������������Ϣ
+    temp3 = StdId;
+    
+    switch(StdId)
     {
-        case 0x207://�������ı�ʶ��
+        case 0x207: // Yaw轴电机
         {
-            //test2++;
-					  static float last_value=-1;
-						static float last_speed=-1;
-					  if(last_value>=0)last_value=GM6020.rotor_angle;
-						if(last_value>=0)last_speed=GM6020.rotor_speed;
- 					  GM6020.rotor_angle    = ((rx_data[0] << 8) | rx_data[1]);//���ջ�е�Ƕȣ�16bit��
-            GM6020.rotor_speed    = ((rx_data[2] << 8) | rx_data[3]);//����ת�٣�16bit��
-            GM6020.torque_current = ((rx_data[4] << 8) | rx_data[5]);//����ʵ��ת��
-            GM6020.temp           =   rx_data[6];//���յ���¶ȣ�8bit��
-					  if(last_value<0){
-							last_value=GM6020.rotor_angle;
-							last_speed=GM6020.rotor_speed;
-						}
-						GM6020.rotor_angle=filter(GM6020.rotor_angle,last_value);
-						GM6020.rotor_speed=filter(GM6020.rotor_speed,last_speed);
+            // 解析原始数据
+            float raw_angle = (float)((rx_data[0] << 8) | rx_data[1]);
+            float raw_speed = (float)((int16_t)((rx_data[2] << 8) | rx_data[3]));
+            
+            // 简单直接的滤波：异常数据直接丢弃
+            GM6020.rotor_angle = (uint16_t)simple_angle_filter(
+                raw_angle, 
+                &motor_207_filter, 
+                2000.0f    // Yaw轴：允许最大100个编码器单位的变化
+            );
+            
+            GM6020.rotor_speed = (int16_t)simple_speed_filter(
+                raw_speed, 
+                &motor_207_filter, 
+                160.0f   // Yaw轴：允许最大1000rpm的速度变化
+            );
+            
+            // 其他数据直接赋值
+            GM6020.torque_current = (int16_t)((rx_data[4] << 8) | rx_data[5]);
+            GM6020.temp = rx_data[6];
             break;
         }
-				case 0x205:
+        
+        case 0x205: // Pitch轴电机
         {
-            //test2++;
- 					  GM6020_pitch.rotor_angle    = ((rx_data[0] << 8) | rx_data[1]);//½ӊջúе½Ƕȣ¨16bit£©(神秘乱码）
-            GM6020_pitch.rotor_speed    = ((rx_data[2] << 8) | rx_data[3]);//½ӊ՗ª˙£¨16bit£©
-            GM6020_pitch.torque_current = ((rx_data[4] << 8) | rx_data[5]);//½ӊՊµ¼ʗª¾؍
-            GM6020_pitch.temp           =   rx_data[6];//½ӊյ绺΂¶ȣ¨8bit£©
+            // 解析原始数据
+            float raw_angle = (float)((rx_data[0] << 8) | rx_data[1]);
+            float raw_speed = (float)((int16_t)((rx_data[2] << 8) | rx_data[3]));
+            
+            // Pitch轴使用更严格的阈值
+            GM6020_pitch.rotor_angle = (uint16_t)simple_angle_filter(
+                raw_angle, 
+                &motor_205_filter, 
+                3000.0f     // Pitch轴：允许最大50个编码器单位的变化
+            );
+            
+            GM6020_pitch.rotor_speed = (int16_t)simple_speed_filter(
+                raw_speed, 
+                &motor_205_filter, 
+                500.0f    // Pitch轴：允许最大500rpm的速度变化
+            );
+            
+            GM6020_pitch.torque_current = (int16_t)((rx_data[4] << 8) | rx_data[5]);
+            GM6020_pitch.temp = rx_data[6];
             break;
         }
-				default:
-				{
-				break;
-				}
-				
-					
+        
+        default:
+            break;
     }
 }
 
-CAN_TxHeaderTypeDef Ctx;
 /**
-*  @brief Send_GM6020_Motor_Message
-*
-*  @author CGH
-*/
+ * @brief 重置滤波器状态
+ * @param motor_id 电机ID
+ */
+void Reset_Filter_State(uint32_t motor_id)
+{
+    switch(motor_id)
+    {
+        case 0x207:
+            memset(&motor_207_filter, 0, sizeof(SimpleFilterState));
+            break;
+            
+        case 0x205:
+            memset(&motor_205_filter, 0, sizeof(SimpleFilterState));
+            break;
+            
+        default:
+            // 重置所有滤波器
+            memset(&motor_207_filter, 0, sizeof(SimpleFilterState));
+            memset(&motor_205_filter, 0, sizeof(SimpleFilterState));
+            break;
+    }
+}
+
+// 保持发送函数不变
+CAN_TxHeaderTypeDef Ctx;
+
 void Send_GM6020_Motor_Message(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
 {
     uint32_t send_mail_box; 
-    Ctx.StdId = CAN_CHASSIS_ALL_ID; //标识符
-    Ctx.IDE = CAN_ID_STD; //标准发送格式
-    Ctx.RTR = CAN_RTR_DATA; //数据帧
-		Ctx.DLC = 0x08; //一次发送的数据的字节数
-    chassis_can_send_data[0] = motor1 >> 8; 
-    chassis_can_send_data[1] = motor1; 
-    chassis_can_send_data[2] = motor2 >> 8; 
-    chassis_can_send_data[3] = motor2; 
-    chassis_can_send_data[4] = motor3 >> 8; 
-    chassis_can_send_data[5] = motor3; 
-    chassis_can_send_data[6] = motor4 >> 8; 
-    chassis_can_send_data[7] = motor4; 
+    
+    Ctx.StdId = CAN_CHASSIS_ALL_ID;
+    Ctx.IDE = CAN_ID_STD;
+    Ctx.RTR = CAN_RTR_DATA;
+    Ctx.DLC = 0x08;
+    
+    chassis_can_send_data[0] = (uint8_t)(motor1 >> 8); 
+    chassis_can_send_data[1] = (uint8_t)(motor1); 
+    chassis_can_send_data[2] = (uint8_t)(motor2 >> 8); 
+    chassis_can_send_data[3] = (uint8_t)(motor2); 
+    chassis_can_send_data[4] = (uint8_t)(motor3 >> 8); 
+    chassis_can_send_data[5] = (uint8_t)(motor3); 
+    chassis_can_send_data[6] = (uint8_t)(motor4 >> 8); 
+    chassis_can_send_data[7] = (uint8_t)(motor4); 
  
     HAL_CAN_AddTxMessage(&CHASSIS_CAN, &Ctx, chassis_can_send_data, &send_mail_box); 
-
     HAL_CAN_AddTxMessage(&CHASSIS_CAN2, &Ctx, chassis_can_send_data, &send_mail_box); 
-
 }
-

@@ -1,4 +1,4 @@
-/**
+ï»¿/**
  ******************************************************************************
  * @file    BMI088driver.c
  * @author
@@ -138,11 +138,11 @@ uint8_t BMI088_init(SPI_HandleTypeDef *bmi088_SPI, uint8_t calibrate)
     return error;
 }
 
-// ½Ï×¼ÁãÆ®
+// è¾ƒå‡†é›¶é£˜
 void Calibrate_MPU_Offset(IMU_Data_t *bmi088)
 {
     static float startTime;
-    static uint16_t CaliTimes = 6000; // ĞèÒª×ã¹»¶àµÄÊı¾İ²ÅÄÜµÃµ½ÓĞĞ§ÍÓÂİÒÇÁãÆ«Ğ£×¼½á¹û
+    static uint16_t CaliTimes = 6000; // éœ€è¦è¶³å¤Ÿå¤šçš„æ•°æ®æ‰èƒ½å¾—åˆ°æœ‰æ•ˆé™€èºä»ªé›¶åæ ¡å‡†ç»“æœ
     uint8_t buf[8] = {0, 0, 0, 0, 0, 0};
     int16_t bmi088_raw_temp;
     float gyroMax[3], gyroMin[3];
@@ -153,7 +153,7 @@ void Calibrate_MPU_Offset(IMU_Data_t *bmi088)
     {
         if (HAL_GetTick() - startTime > 10)
         {
-            // Ğ£×¼³¬Ê±
+            // æ ¡å‡†è¶…æ—¶
             bmi088->GyroOffset[0] = GxOFFSET;
             bmi088->GyroOffset[1] = GyOFFSET;
             bmi088->GyroOffset[2] = GzOFFSET;
@@ -162,7 +162,7 @@ void Calibrate_MPU_Offset(IMU_Data_t *bmi088)
             break;
         }
 
-        HAL_Delay(5);//ä½¿ç”¨åŸç”Ÿåº“
+        HAL_Delay(5);//æµ£è·¨æ•¤é˜ç†ºæ•“æ´ï¿½
         bmi088->gNorm = 0;
         bmi088->GyroOffset[0] = 0;
         bmi088->GyroOffset[1] = 0;
@@ -196,7 +196,7 @@ void Calibrate_MPU_Offset(IMU_Data_t *bmi088)
                 bmi088->GyroOffset[2] += bmi088->Gyro[2];
             }
 
-            // ¼ÇÂ¼Êı¾İ¼«²î
+            // è®°å½•æ•°æ®æå·®
             if (i == 0)
             {
                 gNormMax = gNormTemp;
@@ -222,7 +222,7 @@ void Calibrate_MPU_Offset(IMU_Data_t *bmi088)
                 }
             }
 
-            // Êı¾İ²îÒì¹ı´óÈÏÎªÊÕµ½Íâ½ç¸ÉÈÅ£¬ĞèÖØĞÂĞ£×¼
+            // æ•°æ®å·®å¼‚è¿‡å¤§è®¤ä¸ºæ”¶åˆ°å¤–ç•Œå¹²æ‰°ï¼Œéœ€é‡æ–°æ ¡å‡†
             gNormDiff = gNormMax - gNormMin;
             for (uint8_t j = 0; j < 3; j++)
                 gyroDiff[j] = gyroMax[j] - gyroMin[j];
@@ -234,12 +234,12 @@ void Calibrate_MPU_Offset(IMU_Data_t *bmi088)
             HAL_Delay(1);
         }
 
-        // È¡Æ½¾ùÖµµÃµ½±ê¶¨½á¹û
+        // å–å¹³å‡å€¼å¾—åˆ°æ ‡å®šç»“æœ
         bmi088->gNorm /= (float)CaliTimes;
         for (uint8_t i = 0; i < 3; i++)
             bmi088->GyroOffset[i] /= (float)CaliTimes;
 
-        // ¼ÇÂ¼±ê¶¨Ê±IMUÎÂ¶È
+        // è®°å½•æ ‡å®šæ—¶IMUæ¸©åº¦
         BMI088_accel_read_muli_reg(BMI088_TEMP_M, buf, 2);
         bmi088_raw_temp = (int16_t)((buf[0] << 3) | (buf[1] >> 5));
         if (bmi088_raw_temp > 1023)
@@ -256,7 +256,7 @@ void Calibrate_MPU_Offset(IMU_Data_t *bmi088)
              fabsf(bmi088->GyroOffset[1]) > 0.01f ||
              fabsf(bmi088->GyroOffset[2]) > 0.01f);
 
-    // ¸ù¾İ±ê¶¨½á¹ûĞ£×¼¼ÓËÙ¶È¼Æ±ê¶ÈÒòÊı
+    // æ ¹æ®æ ‡å®šç»“æœæ ¡å‡†åŠ é€Ÿåº¦è®¡æ ‡åº¦å› æ•°
     bmi088->AccelScale = 9.81f / bmi088->gNorm;
 }
 

@@ -164,16 +164,16 @@
           <Type>0</Type>
           <LineNumber>363</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134225346</Address>
+          <Address>0</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
+          <BreakIfRCount>0</BreakIfRCount>
           <Filename>..\User\BMI088driver.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\feed_forward_control\../User/BMI088driver.c\363</Expression>
+          <Expression></Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -948,6 +948,30 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\User\BMI088Middleware.h</PathWithFileName>
       <FilenameWithoutPath>BMI088Middleware.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>55</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\User\Quaternions.c</PathWithFileName>
+      <FilenameWithoutPath>Quaternions.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>56</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\User\Quaternions.h</PathWithFileName>
+      <FilenameWithoutPath>Quaternions.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

@@ -20,16 +20,16 @@
         </Windows>
         <SelectedSymbols>
             <Symbol>
-                <Options Name="rotor_angle" Address="0x20000124" Type="unsigned short" TypeID="7" Size="2" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="928" YMaxSampled="2442" YAvgSampled="1780.16" Offset="4" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="500" MaxValue="65535" File="D:\CODES\Robomaster\Version2\PHOENIX_embedded_train\FeedForward\MDK-ARM/../User/GM6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.rotor_angle" />
+                <Options Name="rotor_angle" Address="0x20000124" Type="unsigned short" TypeID="7" Size="2" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="878" YMaxSampled="57367" YAvgSampled="1259.76" Offset="4" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="20000" MaxValue="65535" File="D:\CODES\Robomaster\Version2\PHOENIX_embedded_train\FeedForward\MDK-ARM/../User/GM6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.rotor_angle" />
             </Symbol>
             <Symbol>
-                <Options Name="rotor_speed" Address="0x20000126" Type="short" TypeID="11" Size="2" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="-162" YMaxSampled="161" YAvgSampled="-0.119062" Offset="6" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="50" MaxValue="32767" File="D:\CODES\Robomaster\Version2\PHOENIX_embedded_train\FeedForward\MDK-ARM/../User/GM6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.rotor_speed" />
+                <Options Name="rotor_speed" Address="0x20000126" Type="short" TypeID="11" Size="2" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="-212" YMaxSampled="26924" YAvgSampled="9.72655" Offset="6" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="20" MaxValue="32767" File="D:\CODES\Robomaster\Version2\PHOENIX_embedded_train\FeedForward\MDK-ARM/../User/GM6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.rotor_speed" />
             </Symbol>
             <Symbol>
-                <Options Name="Set_Speed" Address="0x2000012C" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="-127.993" YMaxSampled="133.412" YAvgSampled="1.55917" Offset="8" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="50" MaxValue="-2147483648" File="D:\CODES\Robomaster\Version2\PHOENIX_embedded_train\FeedForward\MDK-ARM/../User/GM6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.Set_Speed" />
+                <Options Name="Set_Speed" Address="0x2000012C" Type="float" TypeID="1" Size="4" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="-522.832" YMaxSampled="3.81636e+19" YAvgSampled="1.38805e+16" Offset="8" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="20" MaxValue="-2147483648" File="D:\CODES\Robomaster\Version2\PHOENIX_embedded_train\FeedForward\MDK-ARM/../User/GM6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.Set_Speed" />
             </Symbol>
             <Symbol>
-                <Options Name="Set_Angle" Address="0x20000130" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="1100" YMaxSampled="2300" YAvgSampled="1785.79" Offset="12" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="500" MaxValue="-2147483648" File="D:\CODES\Robomaster\Version2\PHOENIX_embedded_train\FeedForward\MDK-ARM/../User/GM6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.Set_Angle" />
+                <Options Name="Set_Angle" Address="0x20000130" Type="float" TypeID="1" Size="4" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="0" YMaxSampled="2300" YAvgSampled="1229.21" Offset="12" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="500" MaxValue="-2147483648" File="D:\CODES\Robomaster\Version2\PHOENIX_embedded_train\FeedForward\MDK-ARM/../User/GM6020.h" DrawStyle="0" NameWithParents=".GM6020_pitch.Set_Angle" />
             </Symbol>
         </SelectedSymbols>
     </Project>

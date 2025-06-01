@@ -791,6 +791,16 @@
               <FileType>5</FileType>
               <FilePath>..\User\Quaternions.h</FilePath>
             </File>
+            <File>
+              <FileName>Filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>Filter.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\Filter.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

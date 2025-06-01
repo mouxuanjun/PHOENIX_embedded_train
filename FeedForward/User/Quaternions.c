@@ -8,6 +8,7 @@
  */
  #include "Quaternions.h"
  #include "arm_math.h"
+ #include "math.h"//没有办法，只能用原生库了
 quaternions_struct_t Quater;
 
 //计算模长（的平方）（只对xyz有效）
@@ -18,12 +19,12 @@ float calculate_norm(const float *arr){
     
 }
 /**
-* @brief 根据陀螺仪数据计算横滚角(roll)和俯仰角(pitch)
+* @brief 根据加速度计数据计算横滚角(roll)和俯仰角(pitch)
 *
 * @param g0 初始重力向量 [3x1]
 * @param g1 当前重力向量 [3x1]
 * @param quaternion 输出四元数 [w, x, y, z]
-* @return 0: 成功, -1: 失败, 1:妙妙错误
+* @return 0: 成功, -1: 失败, 1:妙妙成功
 */
 int calculate_quaternion_from_gravity(const float* g0, const float* g1, float* quaternion)
 {
@@ -49,10 +50,12 @@ int calculate_quaternion_from_gravity(const float* g0, const float* g1, float* q
     arm_scale_f32(g1, 1.0f/g1_norm, g1_normalized, 3);
     
     // 计算向量点积（cos(θ)）
-    arm_dot_prod_f32(g0_normalized, g1_normalized, 3, &dot_product);
+	  arm_dot_prod_f32(g0_normalized, g1_normalized, 3, &dot_product);//点积，因为是归一化的，所以输出就直接是cosθ值
     
     // 限制数值范围
     dot_product = fmaxf(-1.0f, fminf(1.0f, dot_product));
+	  //根据cos值反解θ
+		acosf(dot_product);
     
     // 检查向量是否已经对齐
     if (dot_product > 0.999999f) {
@@ -93,5 +96,35 @@ int calculate_quaternion_from_gravity(const float* g0, const float* g1, float* q
         quaternion[3] = axis[2];  // z分量
         return 0;
 		}
+		// 计算叉积
+    cross_product[0] = g0_normalized[1]*g1_normalized[2] - g0_normalized[2]*g1_normalized[1];
+    cross_product[1] = g0_normalized[2]*g1_normalized[0] - g0_normalized[0]*g1_normalized[2];
+    cross_product[2] = g0_normalized[0]*g1_normalized[1] - g0_normalized[1]*g1_normalized[0];
+    
+    // 计算四元数
+    quaternion[0] = sqrtf((1.0f + dot_product) / 2.0f);  // w（用cos反解θ）
+    float32_t w_inv = 1.0f / (2.0f * quaternion[0]);//方便后面计算
+		
+    //计算四元数（根据w计算因子（好高大上的名字）
+		quaternion[1] = cross_product[0]*w_inv;  // x
+    quaternion[2] = cross_product[1]*w_inv;  // y
+    quaternion[3] = cross_product[2]*w_inv;  // z
+		
+
 		return 1;
+}
+
+
+
+/**
+* @brief 对陀螺仪进行积分来获取四元数角度
+*
+* @param 陀螺仪输出数值[3x1]
+* @param g1 当前重力向量 [3x1]
+* @param quaternion 输出四元数 [w, x, y, z]
+* @return 0: 成功, -1: 失败, 1:妙妙成功
+*/
+uint8_t caculate_angle(){
+	
+	return 1;
 }

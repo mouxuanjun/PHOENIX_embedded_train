@@ -9,7 +9,56 @@
  #include "Quaternions.h"
  #include "arm_math.h"
  #include "math.h"//没有办法，只能用原生库了
+ 
+ #define M_PI 3.1415926
 quaternions_struct_t Quater;
+
+/**
+* @brief 四元数乘法 q1 * q2
+* @param q1 第一个四元数 [w, x, y, z]
+* @param q2 第二个四元数 [w, x, y, z]  
+* @param result 结果四元数 [w, x, y, z]
+*/
+void quaternion_multiply(const float* q1, const float* q2, float* result)
+{
+    float w1 = q1[0], x1 = q1[1], y1 = q1[2], z1 = q1[3];
+    float w2 = q2[0], x2 = q2[1], y2 = q2[2], z2 = q2[3];
+    
+    result[0] = w1*w2 - x1*x2 - y1*y2 - z1*z2;  // w
+    result[1] = w1*x2 + x1*w2 + y1*z2 - z1*y2;  // x
+    result[2] = w1*y2 - x1*z2 + y1*w2 + z1*x2;  // y
+    result[3] = w1*z2 + x1*y2 - y1*x2 + z1*w2;  // z
+}
+/**
+* @brief 四元数转欧拉角
+* @param quaternion 输入四元数 [w, x, y, z]
+* @param roll 输出横滚角 (弧度)
+* @param pitch 输出俯仰角 (弧度)
+* @param yaw 输出偏航角 (弧度)
+* @author Claude Sonnet4
+*/
+void quaternion_to_euler(const float* quaternion, float* roll, float* pitch, float* yaw)
+{
+    float w = quaternion[0], x = quaternion[1], y = quaternion[2], z = quaternion[3];
+    
+    // Roll (x轴旋转)
+    float sinr_cosp = 2.0f * (w * x + y * z);
+    float cosr_cosp = 1.0f - 2.0f * (x * x + y * y);
+    *roll = atan2f(sinr_cosp, cosr_cosp);
+    
+    // Pitch (y轴旋转)
+    float sinp = 2.0f * (w * y - z * x);
+    if (fabsf(sinp) >= 1.0f) {
+        *pitch = copysignf(M_PI / 2.0f, sinp);  // 万向节锁情况
+    } else {
+        *pitch = asinf(sinp);
+    }
+    
+    // Yaw (z轴旋转)
+    float siny_cosp = 2.0f * (w * z + x * y);
+    float cosy_cosp = 1.0f - 2.0f * (y * y + z * z);
+    *yaw = atan2f(siny_cosp, cosy_cosp);
+}
 
 //计算模长（的平方）（只对xyz有效）
 float calculate_norm(const float *arr){
@@ -26,7 +75,7 @@ float calculate_norm(const float *arr){
 * @param quaternion 输出四元数 [w, x, y, z]
 * @return 0: 成功, -1: 失败, 1:妙妙成功
 */
-int calculate_quaternion_from_gravity(const float* g0, const float* g1, float* quaternion)
+uint8_t calculate_quaternion_from_gravity(const float* g0, const float* g1, float* quaternion)
 {
 	float32_t g0_norm, g1_norm;
 	float32_t g0_normalized[3], g1_normalized[3];
@@ -49,7 +98,7 @@ int calculate_quaternion_from_gravity(const float* g0, const float* g1, float* q
     arm_scale_f32(g0, 1.0f/g0_norm, g0_normalized, 3);
     arm_scale_f32(g1, 1.0f/g1_norm, g1_normalized, 3);
     
-    // 计算向量点积（cos(θ)）
+    // 计算向量点积（cosθ）
 	  arm_dot_prod_f32(g0_normalized, g1_normalized, 3, &dot_product);//点积，因为是归一化的，所以输出就直接是cosθ值
     
     // 限制数值范围
@@ -57,7 +106,7 @@ int calculate_quaternion_from_gravity(const float* g0, const float* g1, float* q
 	  //根据cos值反解θ
 		acosf(dot_product);
     
-    // 检查向量是否已经对齐
+	// 检查向量是否已经对齐（这个AI写的，我不清楚为什么要加进来）
     if (dot_product > 0.999999f) {
         quaternion[0] = 1.0f;  // w
         quaternion[1] = 0.0f;  // x
@@ -114,17 +163,62 @@ int calculate_quaternion_from_gravity(const float* g0, const float* g1, float* q
 		return 1;
 }
 
-
+/**
+* @brief 四元数归一化
+* @param quaternion 输入输出四元数 [w, x, y, z]
+*/
+void quaternion_normalize(float* quaternion)
+{
+    float norm_squared = quaternion[0]*quaternion[0] + quaternion[1]*quaternion[1] + 
+                        quaternion[2]*quaternion[2] + quaternion[3]*quaternion[3];
+    
+    if (norm_squared < 1e-6f) {
+        // 设置为单位四元数
+        quaternion[0] = 1.0f;
+        quaternion[1] = quaternion[2] = quaternion[3] = 0.0f;
+        return;
+    }
+    
+    float norm;
+    arm_sqrt_f32(norm_squared, &norm);
+    arm_scale_f32(quaternion, 1.0f/norm, quaternion, 4);
+}
 
 /**
-* @brief 对陀螺仪进行积分来获取四元数角度
+* @brief 对陀螺仪进行积分来获取四元数角度更新
 *
-* @param 陀螺仪输出数值[3x1]
-* @param g1 当前重力向量 [3x1]
+* @param gyro 陀螺仪输出数值[3x1]
+* @param origin_quater 初始姿态四元数[4x1]
+* @param dt 运行间隔
 * @param quaternion 输出四元数 [w, x, y, z]
 * @return 0: 成功, -1: 失败, 1:妙妙成功
 */
-uint8_t caculate_angle(){
-	
-	return 1;
+uint8_t caculate_angle(const float* gyro, const float* origin_quater, float* quaternion, float dt)
+{
+    // 检查输入参数
+    if (gyro == NULL || origin_quater == NULL || quaternion == NULL || dt <= 0) {
+        return -1;
+    }
+    
+    // 构造角速度四元数 [0, wx, wy, wz]
+    float omega_q[4] = {0.0f, gyro[0], gyro[1], gyro[2]};
+    float temp_q[4];//导数
+		float delta_q[4];
+    // 计算四元数导数：dq/dt = 0.5 * q * w
+  
+    quaternion_multiply(origin_quater, omega_q, temp_q);
+    
+    // 除以二
+    arm_scale_f32(temp_q, 0.5f, temp_q, 4);
+    
+    // 一阶积分：q(t+dt) = q(t) + dq/dt * dt
+    
+    arm_scale_f32(temp_q, dt, delta_q, 4);
+    arm_add_f32(origin_quater, delta_q, quaternion, 4);
+    
+    // 归一化保持单位四元数性质
+    quaternion_normalize(quaternion);
+    
+    return 1;
 }
+

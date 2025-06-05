@@ -13,6 +13,35 @@
  #define M_PI 3.1415926
 quaternions_struct_t Quater;
 
+
+
+
+
+
+
+/**
+* @brief 初始化姿态（东北天坐标系）
+*
+* @param gyro 陀螺仪输出数值[3x1]
+* @param origin_quater 初始姿态四元数[w,x,y,z]
+* @param acc 加速度输出数值[3x1]
+* @param magne 磁力计输出值[3x1]
+
+* @return 0: 成功, -1: 失败, 1:妙妙成功
+*/
+uint8_t Quater_Init(const float* gyro, const float* magne,const float* acc,const float* origin_quater,uint8_t check){
+	if(check==1){
+	}else{
+		
+	}
+	
+	
+	
+}
+
+
+
+
 /**
 * @brief 四元数乘法 q1 * q2
 * @param q1 第一个四元数 [w, x, y, z]
@@ -185,7 +214,7 @@ void quaternion_normalize(float* quaternion)
 }
 
 /**
-* @brief 对陀螺仪进行积分来获取四元数角度更新
+* @brief 对陀螺仪进行积分来获取四元数角度更新（一阶龙格库塔法）
 *
 * @param gyro 陀螺仪输出数值[3x1]
 * @param origin_quater 初始姿态四元数[4x1]
@@ -204,9 +233,9 @@ uint8_t caculate_angle(const float* gyro, const float* origin_quater, float* qua
     float omega_q[4] = {0.0f, gyro[0], gyro[1], gyro[2]};
     float temp_q[4];//导数
 		float delta_q[4];
-    // 计算四元数导数：dq/dt = 0.5 * q * w
+    // 计算四元数导数：dq/dt = 0.5 * w*q （右乘，作用于物体坐标系）
   
-    quaternion_multiply(origin_quater, omega_q, temp_q);
+    quaternion_multiply(origin_quater, omega_q, temp_q);//qw
     
     // 除以二
     arm_scale_f32(temp_q, 0.5f, temp_q, 4);
@@ -218,6 +247,7 @@ uint8_t caculate_angle(const float* gyro, const float* origin_quater, float* qua
     
     // 归一化保持单位四元数性质
     quaternion_normalize(quaternion);
+		
     
     return 1;
 }

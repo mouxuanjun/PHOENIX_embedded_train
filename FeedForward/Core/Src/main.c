@@ -28,11 +28,13 @@
 /* USER CODE BEGIN Includes */
 #include "BSP_CAN.h"
 #include "GM6020.h"
+#include "Remote_Control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 Moto_GM6020_t GM6020;
+Moto_GM6020_t GM6020_pitch;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -95,8 +97,11 @@ int main(void)
   MX_DMA_Init();
   MX_CAN1_Init();
   MX_USART1_UART_Init();
+  MX_CAN2_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   CAN_Filter_Init();
+	RC_init();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

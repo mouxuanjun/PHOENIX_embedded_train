@@ -1,5 +1,5 @@
 #include "bsp_can.h"
-
+#define DM4310_ID 0x00
 /**
  * @file BSP_Can.c
  * @brief 初始化筛选器（这里显码和掩码都是0x0000）
@@ -33,6 +33,33 @@ void CAN_Filter_Init(void)
     {
         Error_Handler();
     }
+		
+		HAL_Delay(5);
+		CAN_FilterTypeDef can2_filter_st;
+	
+    can2_filter_st.FilterIdHigh = 0x0000;
+    can2_filter_st.FilterIdLow = 0x0000;
+    can2_filter_st.FilterMaskIdHigh = 0x0000;
+    can2_filter_st.FilterMaskIdLow = 0x0000;
+    can2_filter_st.FilterFIFOAssignment = CAN_RX_FIFO0;
+    can2_filter_st.FilterActivation = ENABLE;
+    can2_filter_st.FilterMode = CAN_FILTERMODE_IDMASK;
+    can2_filter_st.FilterScale = CAN_FILTERSCALE_32BIT;
+    can2_filter_st.FilterBank = 14;
+    can2_filter_st.SlaveStartFilterBank = 14;
+	//使臏CAN通碌脌
+    if (HAL_CAN_ConfigFilter(&hcan2, &can2_filter_st) != HAL_OK)// 扭謨 CAN1 鹿媒聥品
+    {
+        Error_Handler();  // 麓娄脌駴灣
+    }
+    if (HAL_CAN_Start(&hcan2) != HAL_OK)// 拼露炉 CAN1
+    {
+        Error_Handler();
+    }
+    if (HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)// 使臏 CAN1 陆訆諣FIFO0 匣息謵露蠉
+    {
+        Error_Handler();
+    }
 }
 
 /**
@@ -49,10 +76,19 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
 	if(hcan->Instance == CAN1)
     {
-        if(rx_header.StdId == 0x202)
+        if(rx_header.StdId == 0x207)
         {
             Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
         }
+    }
+		if(hcan->Instance == CAN2)
+    {
+        if(rx_header.StdId == 0x205)
+        {
+            Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
+        }else if (rx_header.StdId  == DM4310_ID){
+					
+				}
     }
 }
 

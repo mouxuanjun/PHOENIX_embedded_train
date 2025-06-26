@@ -1,6 +1,7 @@
 #include "GM6020.h"
 
 extern Moto_GM6020_t GM6020;
+extern Moto_GM6020_t GM6020_pitch;
 
 /**
  * @file GM6020.c
@@ -14,12 +15,20 @@ void Get_GM6020_Motor_Message(uint32_t StdId,uint8_t rx_data[8])
 {
     switch(StdId)//½ÓÊÕÖ¸¶¨µç»ú·´À¡µÄÐÅÏ¢
     {
-        case 0x202://·´À¡±¨ÎÄ±êÊ¶·û
+        case 0x207://·´À¡±¨ÎÄ±êÊ¶·û
         {
             GM6020.rotor_angle    = ((rx_data[0] << 8) | rx_data[1]);//½ÓÊÕ»úÐµ½Ç¶È£¨16bit£©
             GM6020.rotor_speed    = ((rx_data[2] << 8) | rx_data[3]);//½ÓÊÕ×ªËÙ£¨16bit£©
             GM6020.torque_current = ((rx_data[4] << 8) | rx_data[5]);//½ÓÊÕÊµ¼Ê×ª¾Ø
             GM6020.temp           =   rx_data[6];//½ÓÊÕµç»úÎÂ¶È£¨8bit£©
+            break;
+        }
+				case 0x205://Â·Â´Ã€Â¡Â±Â¨Î„Â±êŠ¶Â·Ã»
+        {
+            GM6020_pitch.rotor_angle    = ((rx_data[0] << 8) | rx_data[1]);//Â½ÓŠÕ»ÃºÐµÂ½Ç¶È£Â¨16bitÂ£Â©
+            GM6020_pitch.rotor_speed    = ((rx_data[2] << 8) | rx_data[3]);//Â½ÓŠÕ—ÂªË™Â£Â¨16bitÂ£Â©
+            GM6020_pitch.torque_current = ((rx_data[4] << 8) | rx_data[5]);//Â½ÓŠÕŠÂµÂ¼Ê—ÂªÂ¾Ø
+            GM6020_pitch.temp           =   rx_data[6];//Â½ÓŠÕµç»ºÎ‚Â¶È£Â¨8bitÂ£Â©
             break;
         }
     }

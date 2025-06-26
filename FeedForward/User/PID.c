@@ -1,5 +1,5 @@
 #include "PID.h"
-
+#include "math.h"
 /**************************¼¸¸öPID³ıÁË¹ıÁã±£»¤ÍâÃ»ÓĞÈÎºÎÇø±ğ**********************************/
 /********************************************************************************************
 *½Ç¶È»·-KI¸ø0
@@ -61,28 +61,39 @@ void PID_Protect(PID_struct_t *pid,float angle_max)
  * @param i_out »ı·Ö·ÖÀë²ÎÊı£¨Îª0Ê±ÎŞĞ§£©
  * @return PID¼ÆËã½á¹û
  */
-float PID_Calc_Angle(PID_struct_t *PID, float ref, float fdb,float angle_max,float i_out)//PIDÔËËãº¯Êı£¨Ä¿±ê£¬Êµ¼Ê£©
+float PID_Calc_Angle(PID_struct_t *PID, float ref, float fdb, float angle_max, float integral_threshold)
 {
-  PID->ref[0] = ref;
-  PID->fdb = fdb;
-  PID->f_out = PID->kf * (PID->ref[0] - PID->ref[1]);
-	PID_Protect(PID,angle_max);//¹ıÁã±£»¤
+    PID->ref[0] = ref;
+    PID->fdb = fdb;
+    PID->f_out = PID->kf * (PID->ref[0] - PID->ref[1]);
+    PID_Protect(PID, angle_max); // è¿‡è½½ä¿æŠ¤
 
-  PID->err[0] = PID->ref[0] - PID->fdb;
+    PID->err[0] = PID->ref[0] - PID->fdb;
 
-  PID->p_out  = PID->kp * PID->err[0];
-  PID->i_out += PID->ki * PID->err[0];
-  PID->d_out  = PID->kd * (PID->err[0] - PID->err[1]);
-  PID->i_out=Limit_Min_Max(PID->i_out, -PID->i_max, PID->i_max);
-  
-  PID->output = PID->p_out + PID->i_out + PID->d_out + PID->f_out;
-  PID->output=Limit_Min_Max(PID->output, -PID->out_max, PID->out_max);
+    // æ¯”ä¾‹é¡¹
+    PID->p_out = PID->kp * PID->err[0];
+    
+    // ç§¯åˆ†åˆ†ç¦»ï¼šåªæœ‰å½“è¯¯å·®å°äºé˜ˆå€¼æ—¶æ‰ç´¯ç§¯ç§¯åˆ†
+    if (fabs(PID->err[0]) < integral_threshold) {
+        PID->i_out += PID->ki * PID->err[0];
+    }
+    
+    // å¾®åˆ†é¡¹
+    PID->d_out = PID->kd * (PID->err[0] - PID->err[1]);
+    
+    // ç§¯åˆ†é™å¹…
+    PID->i_out = Limit_Min_Max(PID->i_out, -PID->i_max, PID->i_max);
+    
+    // æ€»è¾“å‡º
+    PID->output = PID->p_out + PID->i_out + PID->d_out + PID->f_out;
+    PID->output = Limit_Min_Max(PID->output, -PID->out_max, PID->out_max);
 
-  PID->err[1] = PID->err[0];
-  PID->ref[1] = PID->ref[0];
-  return PID->output;
+    // æ›´æ–°å†å²å€¼
+    PID->err[1] = PID->err[0];
+    PID->ref[1] = PID->ref[0];
+    
+    return PID->output;
 }
-
 /**
  * @brief ËÙ¶È»·PID
  * @param PID PID½á¹¹Ìå

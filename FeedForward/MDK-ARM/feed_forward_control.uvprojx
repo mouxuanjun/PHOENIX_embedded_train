@@ -10,7 +10,7 @@
       <TargetName>feed_forward_control</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARM_Compiler_5.06u7</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -358,7 +358,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Aads>
           <LDads>
@@ -648,6 +648,36 @@
               <FileName>Motor_control.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\User\Motor_control.h</FilePath>
+            </File>
+            <File>
+              <FileName>Remote_Control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Remote_Control.c</FilePath>
+            </File>
+            <File>
+              <FileName>Remote_Control.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\Remote_Control.h</FilePath>
+            </File>
+            <File>
+              <FileName>Motor4310.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Motor4310.c</FilePath>
+            </File>
+            <File>
+              <FileName>Motor4310.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\Motor4310.h</FilePath>
+            </File>
+            <File>
+              <FileName>Motor4310_Driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Motor4310_Driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>Motor4310_Driver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\Motor4310_Driver.h</FilePath>
             </File>
           </Files>
         </Group>

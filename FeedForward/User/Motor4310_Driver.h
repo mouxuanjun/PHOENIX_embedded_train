@@ -1,5 +1,5 @@
-#ifndef __DM4310_DRV_H__
-#define __DM4310_DRV_H__
+#ifndef __MOTOR4310_DRIVER_H__
+#define __MOTOR4310_DRIVER_H__
 #include "main.h"
 #include "can.h"
 #include "BSP_CAN.h"
@@ -18,7 +18,7 @@
 #define KD_MAX 5.0f
 #define T_MIN -10.0f
 #define T_MAX 10.0f
-
+typedef CAN_HandleTypeDef hcan_t;
 // 电机回传信息结构体
 typedef struct 
 {

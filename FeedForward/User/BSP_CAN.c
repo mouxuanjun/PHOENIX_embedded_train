@@ -1,4 +1,6 @@
-#include "bsp_can.h"
+#include "BSP_CAN.h"
+#include "Motor4310.h"
+#include "Motor4310_Driver.h"
 #define DM4310_ID 0x00
 /**
  * @file BSP_Can.c
@@ -87,7 +89,17 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         {
             Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
         }else if (rx_header.StdId  == DM4310_ID){
-					
+					switch (rx_data[0]& 0x0F){//取低4位作为id
+						case 1:
+							dm4310_fbdata(&motor[Motor1], rx_data); 
+						break;
+						case 2:
+							dm4310_fbdata(&motor[Motor1], rx_data);
+						break;
+						case 3:
+							dm4310_fbdata(&motor[Motor1], rx_data);
+						break;
+						}
 				}
     }
 }

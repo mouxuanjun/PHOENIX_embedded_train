@@ -1,5 +1,5 @@
-#ifndef __DM4310_CTRL_H__
-#define __DM4310_CTRL_H__
+#ifndef __MOTOR4310_H__
+#define __MOTOR4310_H__
 #include "main.h"
 #include "Motor4310_Driver.h"
 

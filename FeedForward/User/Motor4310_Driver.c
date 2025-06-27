@@ -1,5 +1,5 @@
 #include "Motor4310_Driver.h"
-#include "can_driver.h"
+
 #include "can.h"
 
 
@@ -11,9 +11,9 @@
 
 /**
 * @brief： canx_send_data:can 发送函数（单独封装）
-* @param: hcan:指向 CAN_TxHeaderTypeDef 结构体的指针，用于配置要发送消息的标识符、帧类型等。
+* @param: hcan*:指向 CAN_TxHeaderTypeDef 结构体的指针，用于配置要发送消息的标识符、帧类型等。
 * @param: id
-* @param：data
+* @param：*data
 * @param：len
 * @retval 1:妙妙成功；0：失败
 **/
@@ -25,7 +25,9 @@ uint8_t canx_send_data(hcan_t *hcan, uint16_t id, uint8_t *data, uint32_t len){
 	tx_header.IDE   = 0;
 	tx_header.RTR   = 0;
 	tx_header.DLC   = len;
-	uint8_t HALstate = HAL_CAN_AddTxMessage(&hcan, &tx_header, data,(uint32_t*)CAN_TX_MAILBOX0);
+	
+  
+	uint8_t HALstate = HAL_CAN_AddTxMessage(hcan, &tx_header, data,(uint32_t*)CAN_TX_MAILBOX0);
 	if (HALstate==HAL_OK){
 		return 1;
 	}else{
@@ -47,8 +49,8 @@ void dm4310_enable(hcan_t* hcan, motor_t *motor)
 	switch(motor->ctrl.mode)
 	{
 		case 0:
-			(hcan, motor->id, MIT_MODE);
-			break;enable_motor_mode
+			enable_motor_mode(hcan, motor->id, MIT_MODE);
+			break;
 		case 1:
 			enable_motor_mode(hcan, motor->id, POS_MODE);
 			break;

@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "BMI088driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,9 +45,10 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+extern fp32 gyro[3], accel[3], temp;
 /* USER CODE END Variables */
 osThreadId Motor_ControlTaHandle;
+osThreadId myTask02Handle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -55,6 +56,7 @@ osThreadId Motor_ControlTaHandle;
 /* USER CODE END FunctionPrototypes */
 
 void Motor_ControlTask(void const * argument);
+void StartTask02(void const * argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -106,6 +108,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(Motor_ControlTa, Motor_ControlTask, osPriorityNormal, 0, 256);
   Motor_ControlTaHandle = osThreadCreate(osThread(Motor_ControlTa), NULL);
 
+  /* definition and creation of myTask02 */
+  osThreadDef(myTask02, StartTask02, osPriorityNormal, 0, 256);
+  myTask02Handle = osThreadCreate(osThread(myTask02), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -130,6 +136,25 @@ __weak void Motor_ControlTask(void const * argument)
     osDelay(1);
   }
   /* USER CODE END Motor_ControlTask */
+}
+
+/* USER CODE BEGIN Header_StartTask02 */
+/**
+* @brief Function implementing the myTask02 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask02 */
+__weak void StartTask02(void const * argument)
+{
+  /* USER CODE BEGIN StartTask02 */
+  /* Infinite loop */
+  for(;;)
+  {	
+		BMI088_read(gyro, accel, &temp);
+		osDelay(10);
+  }
+  /* USER CODE END StartTask02 */
 }
 
 /* Private application code --------------------------------------------------*/

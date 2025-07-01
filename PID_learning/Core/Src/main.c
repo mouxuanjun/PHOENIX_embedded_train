@@ -21,6 +21,7 @@
 #include "cmsis_os.h"
 #include "can.h"
 #include "dma.h"
+#include "spi.h"
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
@@ -31,11 +32,14 @@
 #include "dr_can.h"
 #include "pid.h"
 #include "dr16.h"
+#include "BMI088driver.h"
+#include"3508.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-Moto_GM6020_t GM6020;
+Moto_GM6020_t motor_pitch;  //0x205
+Moto_GM6020_t motor_yaw;    //0x207
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -44,7 +48,7 @@ Moto_GM6020_t GM6020;
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+uint8_t error_t;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -52,6 +56,7 @@ Moto_GM6020_t GM6020;
 /* USER CODE BEGIN PV */
 rc_info_t rc_ctrl;
 uint8_t rx_data[18];
+motor_measure_t motor_chassis[7];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,7 +68,7 @@ void MX_FREERTOS_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+fp32 gyro[3], accel[3], temp;
 /* USER CODE END 0 */
 
 /**
@@ -97,12 +102,16 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_CAN1_Init();
-  MX_USART1_UART_Init();
   MX_USART3_UART_Init();
+  MX_CAN2_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  CAN_Filter_Init();
+  CAN1_Filter_Init();
+  CAN2_Filter_Init();
   MX_USB_DEVICE_Init();
 	HAL_UART_Receive_DMA(&huart3, rx_data, 18);
+	error_t=1;
+	 while(error_t) error_t=BMI088_init();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
@@ -117,10 +126,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
+	
   }
   /* USER CODE END 3 */
 }
@@ -168,6 +178,10 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
+  /** Enables the Clock Security System
+  */
+  HAL_RCC_EnableCSS();
 }
 
 /* USER CODE BEGIN 4 */
@@ -187,7 +201,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM10) {
+  if (htim->Instance == TIM10)
+  {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */

@@ -9,8 +9,10 @@
 #include "cmsis_os.h"
 #include <math.h>
 #include "dr16.h"
+#include"3508.h"
 
-extern Moto_GM6020_t GM6020;
+extern Moto_GM6020_t motor_pitch;  //0x205
+extern Moto_GM6020_t motor_yaw;    //0x207
 
 #endif
 

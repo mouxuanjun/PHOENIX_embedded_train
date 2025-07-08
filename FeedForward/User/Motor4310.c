@@ -18,6 +18,18 @@ motor_t motor[num];
 
 int8_t motor_id = 1;
 
+
+
+
+/**
+* @brief: cur_dm4310: 修改目前操作的电机
+*
+**/
+void cur_dm4310(uint8_t motor_number){
+	motor_id=motor_number;
+}
+
+
 /**
 ************************************************************************
 * @brief:      	dm4310_motor_init: DM4310电机初始化函数

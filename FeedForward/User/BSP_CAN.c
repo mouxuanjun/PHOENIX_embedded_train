@@ -1,13 +1,16 @@
 #include "BSP_CAN.h"
 #include "Motor4310.h"
 #include "Motor4310_Driver.h"
+#include "LK9025.h"
 #define DM4310_ID 0x00
+
 /**
  * @file BSP_Can.c
- * @brief ³õÊ¼»¯É¸Ñ¡Æ÷£¨ÕâÀïÏÔÂëºÍÑÚÂë¶¼ÊÇ0x0000£©
+ * @brief ï¿½ï¿½Ê¼ï¿½ï¿½É¸Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¶¼ï¿½ï¿½0x0000ï¿½ï¿½
  * @author HWX
  * @date 2024/10/20
  */
+extern LKMotor_Measure_t measure;
 void CAN_Filter_Init(void)
 {
     CAN_FilterTypeDef can1_filter_st;
@@ -22,16 +25,16 @@ void CAN_Filter_Init(void)
     can1_filter_st.FilterScale = CAN_FILTERSCALE_32BIT;
     can1_filter_st.FilterBank = 0;
     can1_filter_st.SlaveStartFilterBank = 14;
-	//Ê¹ÄÜCANÍ¨µÀ
-    if (HAL_CAN_ConfigFilter(&hcan1, &can1_filter_st) != HAL_OK)// ÅäÖÃ CAN1 ¹ýÂËÆ÷
+	//Ê¹ï¿½ï¿½CANÍ¨ï¿½ï¿½
+    if (HAL_CAN_ConfigFilter(&hcan1, &can1_filter_st) != HAL_OK)// ï¿½ï¿½ï¿½ï¿½ CAN1 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     {
-        Error_Handler();  // ´¦Àí´íÎó
+        Error_Handler();  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     }
-    if (HAL_CAN_Start(&hcan1) != HAL_OK)// Æô¶¯ CAN1
+    if (HAL_CAN_Start(&hcan1) != HAL_OK)// ï¿½ï¿½ï¿½ï¿½ CAN1
     {
         Error_Handler();
     }
-    if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)// Ê¹ÄÜ CAN1 ½ÓÊÕ FIFO0 ÏûÏ¢ÖÐ¶Ï
+    if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)// Ê¹ï¿½ï¿½ CAN1 ï¿½ï¿½ï¿½ï¿½ FIFO0 ï¿½ï¿½Ï¢ï¿½Ð¶ï¿½
     {
         Error_Handler();
     }
@@ -66,8 +69,8 @@ void CAN_Filter_Init(void)
 
 /**
  * @file BSP_Can.c
- * @brief CAN½ÓÊÜÖÐ¶Ïº¯Êý
- * @param hcan CANÍ¨µÀ
+ * @brief CANï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ïºï¿½ï¿½ï¿½
+ * @param hcan CANÍ¨ï¿½ï¿½
  * @author HWX
  * @date 2024/10/20
  */
@@ -81,7 +84,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         if(rx_header.StdId == 0x207)
         {
             Get_GM6020_Motor_Message(rx_header.StdId,rx_data);
-        }
+        }else if (rx_header.StdId == 0x141){
+                    LKMotorDecode(&measure, rx_data);
+                }
     }
 		if(hcan->Instance == CAN2)
     {
@@ -100,7 +105,10 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 							dm4310_fbdata(&motor[Motor1], rx_data);
 						break;
 						}
-				}
+				}else if (rx_header.StdId == 0x141||rx_header.StdId == 0x142||rx_header.StdId == 0x181){
+                    LKMotorDecode(&measure, rx_data);
+                }
+                
     }
 }
 

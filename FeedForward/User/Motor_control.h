@@ -11,6 +11,8 @@
 
 extern Moto_GM6020_t GM6020;
 extern Moto_GM6020_t GM6020_pitch;
+extern Moto_GM6020_t DM4310;
+extern Moto_GM6020_t MS9025;
 void Send_GM6020_Motor_Message(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
 // CAN相关定义
 #define CAN_CHASSIS_ALL_ID 0x1FF    // 标识符的ID

@@ -679,6 +679,31 @@
               <FileType>5</FileType>
               <FilePath>..\User\Motor4310_Driver.h</FilePath>
             </File>
+            <File>
+              <FileName>Motor3508.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\chassis\Motor3508.c</FilePath>
+            </File>
+            <File>
+              <FileName>LK9025.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\LK9025.c</FilePath>
+            </File>
+            <File>
+              <FileName>LK9025.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\LK9025.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_dwt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\bsp_dwt.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_dwt.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\bsp_dwt.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -35,6 +35,8 @@
 /* USER CODE BEGIN PTD */
 Moto_GM6020_t GM6020;
 Moto_GM6020_t GM6020_pitch;
+Moto_GM6020_t DM4310;
+Moto_GM6020_t MS9025;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -79,6 +81,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+
   HAL_Init();
 
   /* USER CODE BEGIN Init */

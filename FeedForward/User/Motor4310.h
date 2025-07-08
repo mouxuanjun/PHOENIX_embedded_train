@@ -24,6 +24,6 @@ void ctrl_clear_err(void);
 void ctrl_add(void);
 void ctrl_minus(void);
 void ctrl_send(void);
-
+void cur_dm4310(uint8_t motor_number);
 #endif /* __DM4310_CTRL_H__ */
 

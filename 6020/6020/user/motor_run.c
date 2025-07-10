@@ -9,17 +9,16 @@ void motor_init(void){
 
 void motor_control(void const * argument){
     motor_init();
-	  float count=0;
+	  
     while(1){
-        motor_data.angle_set=dr16_receive.s1*100-200;
-        motor_data.angle=motor6020rx.speed;
-        motor_data.give_current=pid_calc(&motor_data.motor_pid[1], motor_data.angle_set, motor_data.angle,8191);
-
-        motor_write(0x1FF,motor_data.give_current,0,0,0);
+        motor_data.speed_set=dr16_receive.ch3/2;
+        motor_data.speed=motor6020rx.speed;
+        motor_data.give_current=pid_calc(&motor_data.motor_pid[1], motor_data.speed_set, motor_data.speed,8191);
+        if(dr16_receive.s1==1)
+            motor_write(0x1FF,0,0,0,motor_data.give_current);
+        else
+            motor_write(0x1FF,0,0,0,0);
         osDelay(1);
-			  count+=0.01;
-				
-
     }
 
 

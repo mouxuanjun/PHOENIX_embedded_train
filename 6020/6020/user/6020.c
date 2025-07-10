@@ -15,7 +15,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan){//中断函数�
     uint8_t RxData[8];
     HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData);
 
-    if(RxHeader.StdId == 0x205){
+    if(RxHeader.StdId == 0x208){
         motor_read(&motor6020rx,RxData);
 
     }   

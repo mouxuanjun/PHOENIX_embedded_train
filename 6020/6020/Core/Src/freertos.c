@@ -49,7 +49,6 @@
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 osThreadId Motor_controlHandle;
-osThreadId poweroffHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -58,7 +57,6 @@ osThreadId poweroffHandle;
 
 void StartDefaultTask(void const * argument);
 void motor_control(void const * argument);
-void Power_off(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -113,10 +111,6 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(Motor_control, motor_control, osPriorityNormal, 0, 256);
   Motor_controlHandle = osThreadCreate(osThread(Motor_control), NULL);
 
-  /* definition and creation of poweroff */
-  osThreadDef(poweroff, Power_off, osPriorityRealtime, 0, 128);
-  poweroffHandle = osThreadCreate(osThread(poweroff), NULL);
-
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -157,24 +151,6 @@ __weak void motor_control(void const * argument)
     osDelay(1);
   }
   /* USER CODE END motor_control */
-}
-
-/* USER CODE BEGIN Header_Power_off */
-/**
-* @brief Function implementing the poweroff thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Power_off */
-__weak void Power_off(void const * argument)
-{
-  /* USER CODE BEGIN Power_off */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Power_off */
 }
 
 /* Private application code --------------------------------------------------*/
